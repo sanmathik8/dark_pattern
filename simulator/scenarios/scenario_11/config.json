@@ -1,0 +1,27 @@
+{
+  "id": 11,
+  "slug": "scenario_11",
+  "title": "Software Download Portal",
+  "category": "Downloads",
+  "dark_patterns": [
+    "misdirection"
+  ],
+  "predicates": {
+    "misdirection": {
+      "positive_predicates": [
+        "deceptive_primary_cta",
+        "hidden_actual_file_link"
+      ],
+      "negative_predicates": [
+        "direct_file_download_in_clean"
+      ]
+    }
+  },
+  "github_repo": "https://github.com/lodash/lodash.git",
+  "commit_hash": "2f79053d2bc7c40562e8111e13e0c0d0c3ab4ef5",
+  "variant_urls": {
+    "dark": "http://localhost:8080/scenario/11?variant=dark",
+    "clean": "http://localhost:8080/scenario/11?variant=clean"
+  },
+  "description": "Download page with prominent green CTA leading to partner apps while actual file link is a small text node."
+}

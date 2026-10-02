@@ -1,0 +1,27 @@
+{
+  "id": 2,
+  "slug": "scenario_02",
+  "title": "Multi-Step Checkout with Late Fees",
+  "category": "Checkout",
+  "dark_patterns": [
+    "hidden_delayed_costs"
+  ],
+  "predicates": {
+    "hidden_delayed_costs": {
+      "positive_predicates": [
+        "late_fee_added",
+        "price_increase_at_checkout"
+      ],
+      "negative_predicates": [
+        "upfront_fee_disclosure_in_clean"
+      ]
+    }
+  },
+  "github_repo": "https://github.com/snipcart/snipcart-html-demo.git",
+  "commit_hash": "c47bf1b2a95c479e0f6e1088a2ef8673f82161f3",
+  "variant_urls": {
+    "dark": "http://localhost:8080/scenario/02?variant=dark",
+    "clean": "http://localhost:8080/scenario/02?variant=clean"
+  },
+  "description": "Multi-step checkout (Cart -> Shipping -> Payment) introducing an unrequested $12 service fee late in the flow."
+}

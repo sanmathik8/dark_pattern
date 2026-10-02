@@ -1,0 +1,35 @@
+{
+  "id": 7,
+  "slug": "scenario_07",
+  "title": "Travel Booking Engine",
+  "category": "Booking",
+  "dark_patterns": [
+    "scarcity_urgency",
+    "hidden_delayed_costs"
+  ],
+  "predicates": {
+    "scarcity_urgency": {
+      "positive_predicates": [
+        "pressure_popup_present"
+      ],
+      "negative_predicates": [
+        "no_pressure_in_clean"
+      ]
+    },
+    "hidden_delayed_costs": {
+      "positive_predicates": [
+        "late_resort_fee_added"
+      ],
+      "negative_predicates": [
+        "upfront_resort_fee_in_clean"
+      ]
+    }
+  },
+  "github_repo": "https://github.com/vuejs/vue.git",
+  "commit_hash": "8cf5522e8910b8bb0982367c3b28b7134371900a",
+  "variant_urls": {
+    "dark": "http://localhost:8080/scenario/07?variant=dark",
+    "clean": "http://localhost:8080/scenario/07?variant=clean"
+  },
+  "description": "Flight/hotel search engine displaying artificial viewer popups and late resort fees."
+}

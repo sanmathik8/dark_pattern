@@ -1,0 +1,26 @@
+{
+  "id": 13,
+  "slug": "scenario_13",
+  "title": "Social Media Privacy Settings",
+  "category": "Settings",
+  "dark_patterns": [
+    "pre_selected_options"
+  ],
+  "predicates": {
+    "pre_selected_options": {
+      "positive_predicates": [
+        "preselected_privacy_data_sharing"
+      ],
+      "negative_predicates": [
+        "unchecked_privacy_sharing_in_clean"
+      ]
+    }
+  },
+  "github_repo": "https://github.com/twbs/bootstrap.git",
+  "commit_hash": "c47bf1b2a95c479e0f6e1088a2ef8673f82161f3",
+  "variant_urls": {
+    "dark": "http://localhost:8080/scenario/13?variant=dark",
+    "clean": "http://localhost:8080/scenario/13?variant=clean"
+  },
+  "description": "User account privacy settings form with pre-checked data sharing and public indexing options."
+}

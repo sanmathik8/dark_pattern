@@ -1,0 +1,27 @@
+{
+  "id": 3,
+  "slug": "scenario_03",
+  "title": "Cart with Pre-Added Extras",
+  "category": "Shopping Cart",
+  "dark_patterns": [
+    "pre_selected_options"
+  ],
+  "predicates": {
+    "pre_selected_options": {
+      "positive_predicates": [
+        "preselected_addon_checkbox",
+        "optional_item_prechecked"
+      ],
+      "negative_predicates": [
+        "clean_unchecked_addons"
+      ]
+    }
+  },
+  "github_repo": "https://github.com/reactjs/redux.git",
+  "commit_hash": "b26d8338e55c68f128d8b9d8858f9188e7b99a12",
+  "variant_urls": {
+    "dark": "http://localhost:8080/scenario/03?variant=dark",
+    "clean": "http://localhost:8080/scenario/03?variant=clean"
+  },
+  "description": "Interactive cart application with pre-checked $19.99 extended warranty and express processing checkboxes."
+}

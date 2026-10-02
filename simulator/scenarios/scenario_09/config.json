@@ -1,0 +1,27 @@
+{
+  "id": 9,
+  "slug": "scenario_09",
+  "title": "SaaS Pricing & Billing",
+  "category": "SaaS Pricing",
+  "dark_patterns": [
+    "forced_continuity"
+  ],
+  "predicates": {
+    "forced_continuity": {
+      "positive_predicates": [
+        "preselected_annual_upfront_plan",
+        "hidden_auto_recurring_billing"
+      ],
+      "negative_predicates": [
+        "explicit_billing_toggle_in_clean"
+      ]
+    }
+  },
+  "github_repo": "https://github.com/vercel/next.js.git",
+  "commit_hash": "fa1298c47b590e0b3c61b12987349b10925c1920",
+  "variant_urls": {
+    "dark": "http://localhost:8080/scenario/09?variant=dark",
+    "clean": "http://localhost:8080/scenario/09?variant=clean"
+  },
+  "description": "SaaS tier grid where annual upfront billing is selected by default with hidden recurring terms."
+}

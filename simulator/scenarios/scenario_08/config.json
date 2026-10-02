@@ -1,0 +1,35 @@
+{
+  "id": 8,
+  "slug": "scenario_08",
+  "title": "Food Delivery App",
+  "category": "Food Delivery",
+  "dark_patterns": [
+    "pre_selected_options",
+    "hidden_delayed_costs"
+  ],
+  "predicates": {
+    "pre_selected_options": {
+      "positive_predicates": [
+        "prechecked_driver_tip"
+      ],
+      "negative_predicates": [
+        "unchecked_tip_in_clean"
+      ]
+    },
+    "hidden_delayed_costs": {
+      "positive_predicates": [
+        "hidden_service_fee"
+      ],
+      "negative_predicates": [
+        "upfront_summary_in_clean"
+      ]
+    }
+  },
+  "github_repo": "https://github.com/tailwindlabs/tailwindcss.git",
+  "commit_hash": "e12a4b8905391d1e6702c2f109289871bb219802",
+  "variant_urls": {
+    "dark": "http://localhost:8080/scenario/08?variant=dark",
+    "clean": "http://localhost:8080/scenario/08?variant=clean"
+  },
+  "description": "Food order checkout with pre-checked 20% driver tips and automated service fee additions."
+}

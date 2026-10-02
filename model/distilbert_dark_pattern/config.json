@@ -1,0 +1,45 @@
+{
+  "activation": "gelu",
+  "architectures": [
+    "DistilBertForSequenceClassification"
+  ],
+  "attention_dropout": 0.1,
+  "bos_token_id": null,
+  "dim": 768,
+  "dropout": 0.1,
+  "dtype": "float32",
+  "eos_token_id": null,
+  "hidden_dim": 3072,
+  "id2label": {
+    "0": "scarcity_urgency",
+    "1": "pre_selected_options",
+    "2": "visual_asymmetry",
+    "3": "confirmshaming",
+    "4": "hidden_delayed_costs",
+    "5": "forced_continuity",
+    "6": "misdirection"
+  },
+  "initializer_range": 0.02,
+  "label2id": {
+    "confirmshaming": 3,
+    "forced_continuity": 5,
+    "hidden_delayed_costs": 4,
+    "misdirection": 6,
+    "pre_selected_options": 1,
+    "scarcity_urgency": 0,
+    "visual_asymmetry": 2
+  },
+  "max_position_embeddings": 512,
+  "model_type": "distilbert",
+  "n_heads": 12,
+  "n_layers": 6,
+  "pad_token_id": 0,
+  "problem_type": "multi_label_classification",
+  "qa_dropout": 0.1,
+  "seq_classif_dropout": 0.2,
+  "sinusoidal_pos_embds": false,
+  "tie_weights_": true,
+  "tie_word_embeddings": true,
+  "transformers_version": "5.0.0",
+  "vocab_size": 30522
+}

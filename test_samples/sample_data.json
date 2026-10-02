@@ -1,0 +1,99 @@
+{
+  "ecommerce": {
+    "url": "https://example-shop.com/checkout",
+    "texts": [
+      "Hurry! Only 2 items left in stock",
+      "89 people added this to cart in the last 15 minutes",
+      "Add 2-year protection plan for $9.99 (Checked)",
+      "Express delivery fee $4.99 added at checkout",
+      "No thanks, I don't want to save money"
+    ],
+    "elements": [
+      {
+        "id": "dp_elem_101",
+        "tag": "span",
+        "text": "Hurry! Only 2 items left in stock",
+        "contrastRatio": 5.2,
+        "rect": {"x": 100, "y": 200, "width": 250, "height": 30}
+      },
+      {
+        "id": "dp_elem_102",
+        "tag": "input",
+        "role": "checkbox",
+        "text": "Add 2-year protection plan for $9.99",
+        "checked": true,
+        "contrastRatio": 4.8,
+        "rect": {"x": 100, "y": 250, "width": 300, "height": 25}
+      },
+      {
+        "id": "dp_elem_103",
+        "tag": "button",
+        "text": "No thanks, I don't want to save money",
+        "contrastRatio": 1.8,
+        "fontSize": 10,
+        "rect": {"x": 100, "y": 300, "width": 200, "height": 20}
+      }
+    ]
+  },
+  "travel": {
+    "url": "https://example-flights.com/book",
+    "texts": [
+      "Special fare ends in 04:59 minutes!",
+      "Mandatory resort & service fee of $35/night added during payment",
+      "12 other travelers are looking at this flight"
+    ]
+  },
+  "saas": {
+    "url": "https://example-saas.com/pricing",
+    "texts": [
+      "Start 7-day free trial. Automatically converts to $49/mo annual subscription.",
+      "Cancellation requires calling customer support during business hours.",
+      "Pre-selected: Annual billing option"
+    ]
+  },
+  "cookie_consent": {
+    "url": "https://example-site.com",
+    "texts": [
+      "ACCEPT ALL COOKIES AND TRACKERS",
+      "Manage preference settings"
+    ],
+    "elements": [
+      {
+        "id": "dp_elem_201",
+        "tag": "button",
+        "text": "ACCEPT ALL COOKIES AND TRACKERS",
+        "backgroundColor": "rgb(34, 197, 94)",
+        "color": "rgb(255, 255, 255)",
+        "contrastRatio": 7.5,
+        "fontSize": 18,
+        "rect": {"x": 200, "y": 400, "width": 300, "height": 50}
+      },
+      {
+        "id": "dp_elem_202",
+        "tag": "a",
+        "text": "Manage preference settings",
+        "backgroundColor": "rgb(240, 240, 240)",
+        "color": "rgb(180, 180, 180)",
+        "contrastRatio": 1.9,
+        "fontSize": 11,
+        "rect": {"x": 200, "y": 460, "width": 200, "height": 20}
+      }
+    ]
+  },
+  "social_media": {
+    "url": "https://example-social.com/feed",
+    "texts": [
+      "John and 45 friends shared this post",
+      "Trending now in your area"
+    ]
+  },
+  "clean_ecommerce": {
+    "url": "https://clean-store.com",
+    "texts": [
+      "Welcome to our catalogue",
+      "Free standard shipping on orders over $50",
+      "Contact support if you need assistance",
+      "Return policy: 30 days money-back guarantee"
+    ]
+  }
+}

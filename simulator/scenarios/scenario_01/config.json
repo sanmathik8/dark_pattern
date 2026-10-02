@@ -1,0 +1,29 @@
+{
+  "id": 1,
+  "slug": "scenario_01",
+  "title": "Flash-Sale Store",
+  "category": "E-Commerce",
+  "dark_patterns": [
+    "scarcity_urgency"
+  ],
+  "predicates": {
+    "scarcity_urgency": {
+      "positive_predicates": [
+        "countdown_timer_present",
+        "urgency_text_present",
+        "scarcity_claim_present"
+      ],
+      "negative_predicates": [
+        "no_timer_in_clean",
+        "no_pressure_in_clean"
+      ]
+    }
+  },
+  "github_repo": "https://github.com/gothinkster/realworld.git",
+  "commit_hash": "a5d89f13e734c3111f181640a33116bcbf29d2bf",
+  "variant_urls": {
+    "dark": "http://localhost:8080/scenario/01?variant=dark",
+    "clean": "http://localhost:8080/scenario/01?variant=clean"
+  },
+  "description": "Product store featuring a live JavaScript countdown timer that decrements and resets on reload."
+}

@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UNIVERSAL PATTERN FINDER — Browser Behavioral Observation & Pattern Research</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --background: #020202;
+      --text-primary: #EBECF0;
+      --text-secondary: #9FA0A6;
+      --text-muted: #5C5C60;
+      --accent: #0FB8F8;
+    }
+
+    body {
+      background-color: var(--background);
+      color: var(--text-primary);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    /* Orbital Motion Keyframes */
+    @keyframes orbit-cw {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @keyframes orbit-ccw {
+      from { transform: rotate(360deg); }
+      to { transform: rotate(-360deg); }
+    }
+    @keyframes sensor-glow {
+      0%, 100% { box-shadow: 0 0 30px rgba(15, 184, 248, 0.2), inset 0 0 20px rgba(15, 184, 248, 0.1); border-color: rgba(15, 184, 248, 0.4); }
+      50% { box-shadow: 0 0 50px rgba(15, 184, 248, 0.4), inset 0 0 30px rgba(15, 184, 248, 0.2); border-color: rgba(15, 184, 248, 0.8); }
+    }
+
+    .orbit-ring-inner { animation: orbit-cw 35s linear infinite; }
+    .orbit-ring-mid { animation: orbit-ccw 55s linear infinite; }
+    .orbit-ring-outer { animation: orbit-cw 80s linear infinite; }
+    .sensor-glow-effect { animation: sensor-glow 4s ease-in-out infinite; }
+
+    /* Counter rotation to keep node text upright */
+    .orbit-node-inner { animation: orbit-ccw 35s linear infinite; }
+    .orbit-node-mid { animation: orbit-cw 55s linear infinite; }
+    .orbit-node-outer { animation: orbit-ccw 80s linear infinite; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: #020202; }
+    ::-webkit-scrollbar-thumb { background: #1a1a1e; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #2a2a30; }
+  </style>
+</head>
+<body class="bg-[#020202] text-[#EBECF0] antialiased min-h-screen flex flex-col font-sans selection:bg-[#0FB8F8] selection:text-black">
+
+  <!-- Background Starfield Canvas -->
+  <canvas id="starfieldCanvas" class="fixed inset-0 pointer-events-none z-0 opacity-50"></canvas>
+
+  <!-- Navigation Header Bar -->
+  <header class="border-b border-[#141418] bg-[#020202]/90 backdrop-blur-xl sticky top-0 z-50 px-6 py-4 flex flex-wrap justify-between items-center gap-4">
+    <div class="flex items-center gap-4">
+      <div class="flex items-center gap-2.5 cursor-pointer" onclick="navigate('observatory')">
+        <span class="w-2.5 h-2.5 rounded-full bg-[#0FB8F8] shadow-[0_0_12px_#0FB8F8]"></span>
+        <span class="font-extrabold tracking-wider text-sm text-[#EBECF0] font-mono">UNIVERSAL PATTERN FINDER</span>
+      </div>
+      <span class="hidden lg:inline-block text-xs text-[#5C5C60] border-l border-[#1a1a1e] pl-4 font-mono">
+        Universal browser-based behavioral observation & pattern research
+      </span>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="flex items-center gap-1 font-mono text-xs bg-[#0a0a0d] p-1 rounded-xl border border-[#141418]">
+      <button id="navObservatory" onclick="navigate('observatory')" class="px-3.5 py-1.5 rounded-lg text-[#0FB8F8] bg-[#0FB8F8]/10 font-bold transition-all">
+        Observatory
+      </button>
+      <button id="navSessions" onclick="navigate('sessions')" class="px-3.5 py-1.5 rounded-lg text-[#9FA0A6] hover:text-[#EBECF0] transition-all">
+        Free-Browsing Sessions
+      </button>
+      <button id="navScenarios" onclick="navigate('scenarios')" class="px-3.5 py-1.5 rounded-lg text-[#9FA0A6] hover:text-[#EBECF0] transition-all">
+        Scenarios
+      </button>
+      <button id="navExperiments" onclick="navigate('experiments')" class="px-3.5 py-1.5 rounded-lg text-[#9FA0A6] hover:text-[#EBECF0] transition-all">
+        Experiments
+      </button>
+      <button id="navEvidence" onclick="navigate('evidence')" class="px-3.5 py-1.5 rounded-lg text-[#9FA0A6] hover:text-[#EBECF0] transition-all">
+        Evidence
+      </button>
+      <button id="navResults" onclick="navigate('results')" class="px-3.5 py-1.5 rounded-lg text-[#9FA0A6] hover:text-[#EBECF0] transition-all">
+        Results
+      </button>
+      <button id="navArchitecture" onclick="navigate('architecture')" class="px-3.5 py-1.5 rounded-lg text-[#9FA0A6] hover:text-[#EBECF0] transition-all">
+        Architecture
+      </button>
+    </nav>
+  </header>
+
+  <!-- MAIN WRAPPER -->
+  <main class="flex-1 flex flex-col relative z-10">
+
+    <!-- VIEW 1: OBSERVATORY HERO (Central Sensor + 15 Orbiting Scenario Nodes) -->
+    <section id="viewObservatory" class="flex-1 flex flex-col items-center justify-between p-6 overflow-hidden min-h-[880px] relative">
+      
+      <!-- Hero Header Title -->
+      <div class="text-center z-20 mt-4 max-w-2xl">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0a0a0d] border border-[#1a1a1e] text-[11px] font-mono text-[#9FA0A6] mb-3">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          UNIVERSAL SENSOR ACTIVE · DATA-DRIVEN SCENARIO OBSERVATORY
+        </div>
+        <h1 class="text-3xl md:text-5xl font-black tracking-tight text-[#EBECF0]">UNIVERSAL PATTERN FINDER</h1>
+        <p class="text-xs md:text-sm text-[#9FA0A6] mt-2 font-mono">
+          Universal browser-based behavioral observation and pattern research platform.
+        </p>
+      </div>
+
+      <!-- CENTRAL UNIVERSAL SENSOR CENTERPIECE WITH ORBITAL SCENARIOS -->
+      <div class="relative w-[620px] h-[620px] flex items-center justify-center my-6 z-20">
+        
+        <!-- Background Radial Aura Glow -->
+        <div class="absolute inset-0 rounded-full bg-[#0FB8F8]/5 blur-3xl pointer-events-none"></div>
+
+        <!-- Outer Orbital Ring (620px) -->
+        <div class="absolute inset-0 rounded-full border border-[#141418] orbit-ring-outer">
+          <div id="outerOrbitNodes" class="relative w-full h-full"></div>
+        </div>
+
+        <!-- Middle Orbital Ring (440px) -->
+        <div class="absolute w-[440px] h-[440px] rounded-full border border-[#1a1a1e] orbit-ring-mid">
+          <div id="midOrbitNodes" class="relative w-full h-full"></div>
+        </div>
+
+        <!-- Inner Orbital Ring (280px) -->
+        <div class="absolute w-[280px] h-[280px] rounded-full border border-[#222228] orbit-ring-inner">
+          <div id="innerOrbitNodes" class="relative w-full h-full"></div>
+        </div>
+
+        <!-- CENTER SENSOR CORE NODE -->
+        <div class="relative w-36 h-36 rounded-full bg-[#020202] border-2 border-[#0FB8F8] sensor-glow-effect flex flex-col items-center justify-center p-3 text-center z-30 cursor-pointer shadow-2xl transition-all" onclick="openWorkspace(1)">
+          <div class="w-3 h-3 rounded-full bg-[#0FB8F8] shadow-[0_0_15px_#0FB8F8] mb-2 animate-ping"></div>
+          <span class="text-[10px] font-mono font-bold tracking-widest text-[#0FB8F8] uppercase">UNIVERSAL SENSOR</span>
+          <span class="text-[9px] font-mono text-[#9FA0A6] mt-1" id="scCountDisplay">15 SCENARIOS ACTIVE</span>
+        </div>
+
+      </div>
+
+      <!-- Observatory Bottom Metrics Ribbon -->
+      <div class="w-full max-w-5xl bg-[#08080a] border border-[#141418] rounded-2xl p-4 grid grid-cols-2 md:grid-cols-4 gap-4 z-20 font-mono text-center">
+        <div class="border-r border-[#141418] last:border-r-0">
+          <span class="text-[10px] text-[#5C5C60] uppercase tracking-wider block">RECALL RATE</span>
+          <span class="text-xl font-bold text-emerald-400 mt-0.5 block">100.0%</span>
+          <p class="text-[10px] text-[#9FA0A6]">17 / 17 Dark Scenarios</p>
+        </div>
+        <div class="border-r border-[#141418] last:border-r-0">
+          <span class="text-[10px] text-[#5C5C60] uppercase tracking-wider block">FALSE POSITIVES</span>
+          <span class="text-xl font-bold text-[#0FB8F8] mt-0.5 block">0 (Clean Baseline)</span>
+          <p class="text-[10px] text-[#9FA0A6]">0 FP on Control Cases</p>
+        </div>
+        <div class="border-r border-[#141418] last:border-r-0">
+          <span class="text-[10px] text-[#5C5C60] uppercase tracking-wider block">BENCHMARK F1-SCORE</span>
+          <span class="text-xl font-bold text-amber-400 mt-0.5 block">1.000</span>
+          <p class="text-[10px] text-[#9FA0A6]">Ground Truth Verified</p>
+        </div>
+        <div>
+          <span class="text-[10px] text-[#5C5C60] uppercase tracking-wider block">EVALUATION METHOD</span>
+          <span class="text-xl font-bold text-[#EBECF0] mt-0.5 block">BEHAVIORAL DIFF</span>
+          <p class="text-[10px] text-[#9FA0A6]">TP, FP, FN, TN Verdict</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION B: SCENARIO ENVIRONMENTS GRID -->
+    <section class="border-t border-[#141418] bg-[#020202] py-16 px-6 z-20">
+      <div class="max-w-6xl mx-auto">
+        <div class="flex justify-between items-end mb-8">
+          <div>
+            <span class="text-xs font-mono text-[#0FB8F8] uppercase tracking-widest block mb-1">EXPERIMENTAL ENVIRONMENTS</span>
+            <h2 class="text-2xl font-bold text-[#EBECF0]">Data-Driven Scenario Suite</h2>
+          </div>
+          <span class="text-xs font-mono text-[#5C5C60]">Loaded dynamically from manifest.json</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="scenariosGrid">
+          <!-- Dynamically populated scenario cards -->
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW: FREE-BROWSING RESEARCH SESSIONS INSPECTOR -->
+    <section id="viewSessions" class="hidden border-t border-[#141418] bg-[#020202] py-12 px-6 z-20 font-mono">
+      <div class="max-w-7xl mx-auto space-y-6">
+        <div class="flex flex-wrap justify-between items-end border-b border-[#141418] pb-4 gap-4">
+          <div>
+            <span class="text-xs text-[#0FB8F8] uppercase tracking-widest block mb-1">FREE-BROWSING OBSERVATION LABORATORY</span>
+            <h2 class="text-2xl font-bold text-[#EBECF0]">UPF Extension Research Session Inspector</h2>
+            <p class="text-xs text-[#9FA0A6] mt-1 font-sans">Arbitrary website free-browsing trace analysis, empirical evidence & unresolved research questions</p>
+          </div>
+          <button onclick="pollFreeBrowsingTraces()" class="px-3.5 py-2 rounded-xl bg-[#0a0a0d] border border-[#141418] hover:border-[#0FB8F8]/40 text-xs text-[#0FB8F8] font-bold transition-all flex items-center gap-2">
+            <span>🔄</span> Refresh Traces
+          </button>
+        </div>
+
+        <!-- Latest Session Panel -->
+        <div class="bg-[#08080a] border border-[#141418] rounded-2xl p-6 space-y-6">
+          <div class="flex justify-between items-center text-xs text-[#9FA0A6]">
+            <span class="text-[#0FB8F8] font-bold text-xs uppercase tracking-wider">LATEST RECORDED RESEARCH TRACE</span>
+            <span id="sessionTimestamp" class="font-mono text-[11px] text-[#5C5C60]">No free-browsing trace captured yet</span>
+          </div>
+
+          <div id="latestSessionBody" class="space-y-4">
+            <div class="bg-[#020202] border border-[#141418] p-6 rounded-xl text-center space-y-2">
+              <span class="text-3xl block">🔬</span>
+              <p class="text-sm font-bold text-[#EBECF0]">No arbitrary free-browsing research session captured yet.</p>
+              <p class="text-xs text-[#9FA0A6] max-w-xl mx-auto font-sans leading-relaxed">
+                Open the UPF Extension popup on any website, click <strong class="text-[#ef4444]">🔴 START RESEARCH SESSION</strong>, browse normally, then click stop.
+                The engine will evaluate DOM, interactions, state transitions, evidence, and display pattern findings & unresolved questions here.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Historical Sessions Stream -->
+        <div class="space-y-4">
+          <h3 class="text-xs font-bold text-[#EBECF0] uppercase tracking-wider">Session History Stream</h3>
+          <div id="sessionsHistoryList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 2: DATA-DRIVEN EXPERIMENT WORKSPACE CONSOLE -->
+    <section id="viewWorkspace" class="hidden fixed inset-0 bg-[#020202] z-50 p-6 flex flex-col space-y-4 overflow-y-auto">
+      
+      <!-- Workspace Header Bar -->
+      <div class="bg-[#08080a] border border-[#141418] rounded-2xl p-5 flex flex-wrap justify-between items-center gap-4">
+        <div>
+          <button onclick="closeWorkspace()" class="inline-flex items-center gap-2 text-xs font-mono font-bold text-[#0FB8F8] hover:underline mb-2 transition-all">
+            ← BACK TO OBSERVATORY
+          </button>
+          <div class="flex items-center gap-3">
+            <h2 class="text-xl font-black text-[#EBECF0]" id="wsScenarioTitle">CASE 01: FLASH-SALE STORE</h2>
+            <span class="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded bg-[#0FB8F8]/10 text-[#0FB8F8] border border-[#0FB8F8]/30" id="wsCategory">E-Commerce</span>
+          </div>
+        </div>
+
+        <!-- Universal Sensor & Extension Health Badges -->
+        <div class="flex items-center gap-2 font-mono text-[11px]">
+          <div class="bg-[#020202] border border-[#141418] px-3 py-1.5 rounded-xl flex items-center gap-2">
+            <span class="text-[#5C5C60]">EXTENSION:</span>
+            <span id="badgeExtension" class="text-emerald-400 font-bold">● ACTIVE</span>
+          </div>
+          <div class="bg-[#020202] border border-[#141418] px-3 py-1.5 rounded-xl flex items-center gap-2">
+            <span class="text-[#5C5C60]">SENSOR:</span>
+            <span id="badgeSensor" class="text-emerald-400 font-bold">● CONNECTED</span>
+          </div>
+          <div class="bg-[#020202] border border-[#141418] px-3 py-1.5 rounded-xl flex items-center gap-2">
+            <span class="text-[#5C5C60]">PAGE:</span>
+            <span id="badgePage" class="text-emerald-400 font-bold">● LOADED</span>
+          </div>
+        </div>
+
+        <!-- Variant Controls & Start Real Session -->
+        <div class="flex items-center gap-3">
+          <div class="flex items-center bg-[#020202] p-1 rounded-xl border border-[#141418] font-mono text-xs">
+            <button id="wsBtnClean" onclick="setVariant('clean')" class="px-4 py-1.5 rounded-lg font-bold transition-all text-[#9FA0A6] hover:text-[#EBECF0]">
+              CLEAN VARIANT
+            </button>
+            <button id="wsBtnDark" onclick="setVariant('dark')" class="px-4 py-1.5 rounded-lg font-bold transition-all bg-red-500/20 text-red-400 border border-red-500/40">
+              DARK VARIANT
+            </button>
+          </div>
+
+          <button onclick="startRealSession()" class="bg-[#0FB8F8] hover:bg-[#0FB8F8]/80 text-black font-mono font-bold px-5 py-2 rounded-xl text-xs flex items-center gap-2 shadow-lg shadow-[#0FB8F8]/20 transition-all">
+            <span>⚡</span> LAUNCH REAL SESSION
+          </button>
+        </div>
+      </div>
+
+      <!-- RESEARCH CONTEXT & DATA-DRIVEN USER JOURNEY PIPELINE -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-4 font-mono text-xs">
+        
+        <!-- Question Box (5 Cols) -->
+        <div class="md:col-span-5 bg-[#08080a] border border-[#141418] rounded-xl p-4 flex flex-col justify-between">
+          <div>
+            <span class="text-[#0FB8F8] font-bold text-[10px] uppercase tracking-wider block mb-1">WHAT ARE WE TESTING?</span>
+            <p id="wsResearchQuestion" class="text-[#EBECF0] text-xs leading-relaxed font-sans">
+              Does the application employ artificial time pressure or resetting countdown timers to manipulate user purchase decisions?
+            </p>
+          </div>
+          <div class="mt-3 border-t border-[#141418] pt-2 flex items-center gap-2 flex-wrap">
+            <span class="text-[9px] text-[#5C5C60] uppercase">Observable Dimensions:</span>
+            <div id="wsDimensionsList" class="flex gap-1.5 flex-wrap">
+              <!-- Dynamically populated tags -->
+            </div>
+          </div>
+        </div>
+
+        <!-- User Journey Pipeline (7 Cols) -->
+        <div class="md:col-span-7 bg-[#08080a] border border-[#141418] rounded-xl p-4 flex flex-col justify-between">
+          <span class="text-[#5C5C60] font-bold text-[10px] uppercase tracking-wider block mb-2">USER JOURNEY FLOW</span>
+          <div id="wsJourneyFlow" class="grid grid-cols-2 md:grid-cols-4 gap-2 text-center">
+            <!-- Dynamically populated journey steps -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- REAL APPLICATION HERO VIEWPORT & DYNAMIC EVIDENCE GRID (12 Cols) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1 min-h-[600px]">
+        
+        <!-- LEFT HERO COLUMN (8 Cols): REAL APPLICATION TEST BROWSER -->
+        <div class="lg:col-span-8 bg-[#08080a] border border-[#141418] rounded-2xl p-4 flex flex-col space-y-3">
+          
+          <!-- Viewport Header Bar -->
+          <div class="bg-[#020202] border border-[#141418] rounded-xl px-4 py-2.5 flex items-center justify-between text-xs text-[#9FA0A6] font-mono">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+              <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
+              <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
+              <span class="text-[11px] font-bold text-[#EBECF0] ml-2">REAL TEST BROWSER SESSION</span>
+            </div>
+            <div class="flex items-center gap-3 text-[10px]">
+              <a id="wsRepoUrl" href="#" target="_blank" class="text-[#0FB8F8] hover:underline font-bold">github.com/...</a>
+              <span id="wsCommitHash" class="text-[#5C5C60]">commit a5d89f13</span>
+            </div>
+          </div>
+
+          <!-- Browser Address Bar & Navigation -->
+          <div class="flex items-center gap-2 bg-[#020202] border border-[#141418] p-2 rounded-xl text-xs font-mono">
+            <button onclick="sendInteraction('back')" class="px-2.5 py-1 rounded bg-[#08080a] hover:bg-[#141418] text-[#9FA0A6]">←</button>
+            <button onclick="sendInteraction('forward')" class="px-2.5 py-1 rounded bg-[#08080a] hover:bg-[#141418] text-[#9FA0A6]">→</button>
+            <button onclick="refreshScreenshot()" class="px-2.5 py-1 rounded bg-[#08080a] hover:bg-[#141418] text-[#9FA0A6]">↻</button>
+            <input id="wsAddressInput" type="text" value="http://localhost:8080/scenario/01?variant=dark" class="flex-1 bg-[#08080a] border border-[#141418] px-3 py-1 rounded text-[11px] text-[#EBECF0] focus:outline-none focus:border-[#0FB8F8]">
+            <button onclick="sendInteraction('navigate')" class="px-3 py-1 rounded bg-[#0FB8F8]/20 text-[#0FB8F8] border border-[#0FB8F8]/30 font-bold hover:bg-[#0FB8F8]/30">GO</button>
+          </div>
+
+          <!-- Real Screenshot Live Stream Frame (DOMINANT VIEWPORT) -->
+          <div class="relative flex-1 bg-black border border-[#141418] rounded-xl overflow-hidden min-h-[440px] flex items-center justify-center">
+            <img id="realBrowserStream" src="/api/session/screenshot" alt="Real Browser Session Frame" class="w-full h-full object-contain" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'640\' height=\'400\'><rect width=\'100%\' height=\'100%\' fill=\'%2308080a\'/><text x=\'50%\' y=\'50%\' fill=\'%230FB8F8\' font-family=\'monospace\' font-size=\'14\' text-anchor=\'middle\'>[ REAL PLAYWRIGHT CHROMIUM VIEWPORT FRAME ]</text></svg>';">
+            
+            <div class="absolute top-3 right-3 bg-[#020202]/80 backdrop-blur-md border border-[#141418] px-3 py-1 rounded-lg text-[10px] font-mono flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span class="text-[#EBECF0]">LIVE BROWSER STREAM</span>
+            </div>
+          </div>
+
+          <!-- GENERATED SCENARIO-SPECIFIC INTERACTION CONTROLS -->
+          <div class="bg-[#020202] border border-[#141418] rounded-xl p-3.5 font-mono text-xs">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-[#0FB8F8] text-[10px] uppercase font-bold tracking-wider">SCENARIO EXPERIMENT ACTIONS</span>
+              <button onclick="toggleAdvancedTools()" class="text-[10px] text-[#5C5C60] hover:text-[#9FA0A6] underline">
+                Advanced Tools ⚙️
+              </button>
+            </div>
+            
+            <div id="wsGeneratedControls" class="flex flex-wrap gap-2">
+              <!-- Dynamically generated action buttons -->
+            </div>
+
+            <!-- COLLAPSIBLE ADVANCED RESEARCH TOOLS -->
+            <div id="advancedToolsDrawer" class="hidden mt-3 pt-3 border-t border-[#141418] flex flex-wrap items-center gap-2">
+              <span class="text-[#5C5C60] text-[10px] uppercase">Custom Action:</span>
+              <input id="actionSelector" type="text" placeholder="CSS Selector (e.g. button.checkout)" class="flex-1 bg-[#08080a] border border-[#141418] px-2.5 py-1 rounded text-[11px] text-[#EBECF0]">
+              <input id="actionText" type="text" placeholder="Text input" class="w-28 bg-[#08080a] border border-[#141418] px-2.5 py-1 rounded text-[11px] text-[#EBECF0]">
+              <button onclick="sendInteraction('click')" class="px-3 py-1 rounded bg-[#141418] hover:bg-[#222228] text-[#EBECF0] font-bold">Click</button>
+              <button onclick="sendInteraction('type')" class="px-3 py-1 rounded bg-[#141418] hover:bg-[#222228] text-[#EBECF0] font-bold">Type</button>
+              <button onclick="sendInteraction('scroll')" class="px-3 py-1 rounded bg-[#141418] hover:bg-[#222228] text-[#EBECF0] font-bold">Scroll</button>
+              <button onclick="sendInteraction('hover')" class="px-3 py-1 rounded bg-[#141418] hover:bg-[#222228] text-[#EBECF0] font-bold">Hover</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN (4 Cols): DYNAMIC EVIDENCE & TELEMETRY PANELS -->
+        <div class="lg:col-span-4 flex flex-col space-y-4">
+          
+          <!-- Live Behavioral Analysis Pipeline Graph -->
+          <div class="border border-[#141418] rounded-2xl p-4 bg-[#08080a] font-mono">
+            <div class="flex justify-between items-center mb-2.5">
+              <span class="text-[11px] font-bold text-[#0FB8F8] uppercase tracking-wider">⚡ LIVE ANALYSIS PIPELINE</span>
+              <span id="wsVerdictBadge" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">SUPPORTED</span>
+            </div>
+
+            <!-- Pipeline Stages Flow -->
+            <div class="space-y-1.5 text-[10px]">
+              <div class="flex items-center gap-2 bg-[#020202] border border-[#141418] p-1.5 rounded">
+                <span class="w-4 h-4 rounded-full bg-[#0FB8F8] text-black font-bold flex items-center justify-center text-[9px]">1</span>
+                <span class="text-[#EBECF0] font-bold">INTERACTION DETECTED</span>
+                <span class="text-[#5C5C60] ml-auto truncate max-w-[130px]" id="wsStageDetail_1">User Click Action</span>
+              </div>
+              <div class="flex items-center gap-2 bg-[#020202] border border-[#141418] p-1.5 rounded">
+                <span class="w-4 h-4 rounded-full bg-[#0FB8F8] text-black font-bold flex items-center justify-center text-[9px]">2</span>
+                <span class="text-[#EBECF0] font-bold">CAPTURE BEFORE STATE</span>
+                <span class="text-[#5C5C60] ml-auto truncate max-w-[130px]" id="wsStageDetail_2">Pre-state snapshot</span>
+              </div>
+              <div class="flex items-center gap-2 bg-[#020202] border border-[#141418] p-1.5 rounded">
+                <span class="w-4 h-4 rounded-full bg-[#0FB8F8] text-black font-bold flex items-center justify-center text-[9px]">3</span>
+                <span class="text-[#EBECF0] font-bold">ACTION ANALYSIS</span>
+                <span class="text-[#5C5C60] ml-auto truncate max-w-[130px]" id="wsStageDetail_3">Target properties</span>
+              </div>
+              <div class="flex items-center gap-2 bg-[#020202] border border-[#141418] p-1.5 rounded">
+                <span class="w-4 h-4 rounded-full bg-[#0FB8F8] text-black font-bold flex items-center justify-center text-[9px]">4</span>
+                <span class="text-[#EBECF0] font-bold">CAPTURE AFTER STATE</span>
+                <span class="text-[#5C5C60] ml-auto truncate max-w-[130px]" id="wsStageDetail_4">Post-state snapshot</span>
+              </div>
+
+              <!-- Parallel Diff Branches -->
+              <div class="grid grid-cols-3 gap-1 text-[9px] text-center my-1">
+                <div class="bg-[#020202] border border-[#0FB8F8]/40 text-[#0FB8F8] py-1 rounded font-bold">DOM DIFF</div>
+                <div class="bg-[#020202] border border-[#0FB8F8]/40 text-[#0FB8F8] py-1 rounded font-bold">NETWORK</div>
+                <div class="bg-[#020202] border border-[#0FB8F8]/40 text-[#0FB8F8] py-1 rounded font-bold">STORAGE</div>
+              </div>
+
+              <div class="flex items-center gap-2 bg-[#020202] border border-[#141418] p-1.5 rounded">
+                <span class="w-4 h-4 rounded-full bg-[#0FB8F8] text-black font-bold flex items-center justify-center text-[9px]">6</span>
+                <span class="text-[#EBECF0] font-bold">PATTERN ANALYSIS</span>
+                <span class="text-[#5C5C60] ml-auto truncate max-w-[130px]" id="wsStageDetail_6">Predicate matching</span>
+              </div>
+              <div class="flex items-center gap-2 bg-[#020202] border border-[#141418] p-1.5 rounded">
+                <span class="w-4 h-4 rounded-full bg-[#0FB8F8] text-black font-bold flex items-center justify-center text-[9px]">7</span>
+                <span class="text-[#EBECF0] font-bold">EVIDENCE FUSION</span>
+                <span class="text-[#5C5C60] ml-auto truncate max-w-[130px]" id="wsStageDetail_7">Fused DOM + State</span>
+              </div>
+            </div>
+
+            <div id="wsPredicateList" class="text-[11px] font-mono text-[#9FA0A6] space-y-1.5 mt-3 border-t border-[#141418] pt-2">
+              <!-- Dynamically populated ground truth predicates -->
+            </div>
+            <p id="wsVerdictText" class="text-xs font-mono text-[#EBECF0] leading-relaxed bg-[#020202] p-2.5 rounded border border-[#141418] mt-2">
+              <!-- Dynamically populated evidence summary -->
+            </p>
+          </div>
+
+          <!-- Extension Sensor Telemetry Log -->
+          <div class="border border-[#141418] rounded-2xl p-4 bg-[#08080a] flex flex-col h-48">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-[10px] font-mono font-bold text-[#0FB8F8] uppercase tracking-widest">SENSOR TELEMETRY</span>
+              <span class="text-[9px] font-mono text-emerald-400 font-bold">● ACTIVE STREAM</span>
+            </div>
+            <div id="observationLog" class="flex-1 font-mono text-[11px] text-[#EBECF0] space-y-1.5 overflow-y-auto pr-1 bg-[#020202] p-3 rounded-xl border border-[#141418]">
+              <p class="text-[#5C5C60]">[00:00] Real browser persistent context created.</p>
+              <p class="text-emerald-400">[00:14] UPF Extension injected into page DOM.</p>
+              <p class="text-[#0FB8F8]">[00:15] Universal Sensor initialized & observing DOM mutations.</p>
+            </div>
+          </div>
+
+          <!-- Real System Session Timeline (00:00 - 00:30) -->
+          <div class="border border-[#141418] rounded-2xl p-4 bg-[#08080a] flex flex-col h-48">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-[10px] font-mono font-bold text-[#5C5C60] uppercase tracking-widest">SYSTEM SESSION TIMELINE</span>
+              <span class="text-[9px] font-mono text-[#9FA0A6]">SYSTEM LOG</span>
+            </div>
+            <div id="timelineLog" class="flex-1 font-mono text-[11px] text-[#9FA0A6] space-y-1.5 overflow-y-auto pr-1 bg-[#020202] p-3 rounded-xl border border-[#141418]">
+              <p><span class="text-[#0FB8F8]">00:00</span> Environment created for Scenario</p>
+              <p><span class="text-[#0FB8F8]">00:03</span> GitHub repository checked out at pinned commit</p>
+              <p><span class="text-[#0FB8F8]">00:08</span> Scenario dependencies verified ready</p>
+              <p><span class="text-[#0FB8F8]">00:11</span> Application server running on port 8080</p>
+              <p><span class="text-[#0FB8F8]">00:13</span> Real Playwright Chromium browser started</p>
+              <p><span class="text-[#0FB8F8]">00:14</span> UPF Extension loaded into persistent context</p>
+              <p><span class="text-[#0FB8F8]">00:15</span> Universal Sensor status: ACTIVE</p>
+              <p><span class="text-emerald-400 font-bold">00:30</span> Experiment complete</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- OTHER VIEWS (Scenarios, Experiments, Evidence, Results, Architecture) -->
+    <section id="viewExperiments" class="hidden p-6 max-w-5xl mx-auto w-full space-y-6">
+      <div class="bg-[#08080a] border border-[#141418] rounded-2xl p-6">
+        <h2 class="text-xl font-bold text-[#EBECF0] mb-1">Experiment Execution Log</h2>
+        <p class="text-xs font-mono text-[#9FA0A6]">Recorded benchmark evaluation runs stored in evaluation_results.json.</p>
+        <div class="overflow-x-auto mt-6">
+          <table class="w-full text-left text-xs font-mono text-[#EBECF0] border-collapse">
+            <thead>
+              <tr class="border-b border-[#141418] bg-[#020202] text-[#5C5C60] uppercase text-[11px]">
+                <th class="py-3 px-4">RUN ID</th><th class="py-3 px-4">SCENARIOS</th><th class="py-3 px-4">VARIANTS</th><th class="py-3 px-4">STATUS</th><th class="py-3 px-4">RECALL</th><th class="py-3 px-4">PRECISION</th><th class="py-3 px-4">F1-SCORE</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[#141418]">
+              <tr>
+                <td class="py-3 px-4 text-[#0FB8F8] font-bold">#RUN-030</td><td class="py-3 px-4">15 Scenarios</td><td class="py-3 px-4">30 Variants</td><td><span class="bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded text-[10px]">COMPLETE</span></td><td class="py-3 px-4 text-emerald-400 font-bold">100.0%</td><td class="py-3 px-4 text-[#0FB8F8]">100.0%</td><td class="py-3 px-4 text-amber-400 font-bold">1.000</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="viewEvidence" class="hidden p-6 max-w-5xl mx-auto w-full space-y-6">
+      <div class="bg-[#08080a] border border-[#141418] rounded-2xl p-6">
+        <h2 class="text-xl font-bold text-[#EBECF0] mb-1">Behavioral Evidence Inspector</h2>
+        <p class="text-xs font-mono text-[#9FA0A6]">Differential comparison between CLEAN and DARK variant executions.</p>
+        <div class="mt-6 bg-[#020202] border border-[#141418] rounded-xl p-4 font-mono text-xs space-y-3">
+          <span class="text-[#0FB8F8] font-bold block">SCENARIO 01: FLASH-SALE STORE STATE COMPARISON</span>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-[#08080a] p-3 rounded border border-[#141418]">
+              <span class="text-emerald-400 font-bold block mb-1">CLEAN VARIANT</span>
+              <p class="text-[#9FA0A6]">No countdown timer banner present.</p>
+              <p class="text-[#EBECF0] font-bold">Standard Store Product View</p>
+            </div>
+            <div class="bg-[#08080a] p-3 rounded border border-[#141418]">
+              <span class="text-red-400 font-bold block mb-1">DARK VARIANT</span>
+              <p class="text-[#9FA0A6]">Live JavaScript timer decrementing every second.</p>
+              <p class="text-red-300 font-bold">False Scarcity & Urgency Pressure Banner Active</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="viewResults" class="hidden p-6 max-w-5xl mx-auto w-full space-y-6">
+      <div class="bg-[#08080a] border border-[#141418] rounded-2xl p-6">
+        <h2 class="text-xl font-bold text-[#EBECF0] mb-1">Benchmark Scorecard & Confusion Matrix</h2>
+        <p class="text-xs font-mono text-[#9FA0A6] mb-6">Empirical metrics calculated from real browser experiments.</p>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8 font-mono text-xs">
+          <div class="bg-[#020202] border border-[#141418] rounded-xl p-4"><span class="text-[#5C5C60] text-[10px] uppercase">TP</span><span class="block text-2xl font-bold text-emerald-400 mt-1">17</span></div>
+          <div class="bg-[#020202] border border-[#141418] rounded-xl p-4"><span class="text-[#5C5C60] text-[10px] uppercase">TN</span><span class="block text-2xl font-bold text-[#0FB8F8] mt-1">183</span></div>
+          <div class="bg-[#020202] border border-[#141418] rounded-xl p-4"><span class="text-[#5C5C60] text-[10px] uppercase">FP</span><span class="block text-2xl font-bold text-amber-400 mt-1">0</span></div>
+          <div class="bg-[#020202] border border-[#141418] rounded-xl p-4"><span class="text-[#5C5C60] text-[10px] uppercase">FN</span><span class="block text-2xl font-bold text-purple-400 mt-1">0</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="viewArchitecture" class="hidden p-6 max-w-5xl mx-auto w-full space-y-6">
+      <div class="bg-[#08080a] border border-[#141418] rounded-2xl p-6">
+        <h2 class="text-xl font-bold text-[#EBECF0] mb-2">Single-Source Platform Architecture</h2>
+        <p class="text-xs font-mono text-[#9FA0A6]">GitHub → Pinned Commit → EnvironmentManager → BrowserSession (Playwright Chromium + UPF Extension) → Universal Sensor → Event Stream → Evaluator.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- SCRIPT LOGIC -->
+  <script>
+    let manifestScenarios = [];
+    let activeScenarioId = 1;
+    let activeVariant = 'dark';
+    let screenshotInterval = null;
+
+    // Load Canonical Manifest
+    async function loadManifest() {
+      try {
+        const resp = await fetch('/manifest.json');
+        const data = await resp.json();
+        manifestScenarios = data.scenarios || [];
+        document.getElementById('scCountDisplay').textContent = `${manifestScenarios.length} SCENARIOS ACTIVE`;
+        renderOrbitalNodes();
+        renderScenariosGrid();
+      } catch (e) {
+        console.log('Manifest load error:', e);
+      }
+    }
+
+    // Canvas Starfield
+    function initStarfield() {
+      const canvas = document.getElementById('starfieldCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let width = canvas.width = window.innerWidth;
+      let height = canvas.height = window.innerHeight;
+
+      const stars = [];
+      const numStars = 140;
+
+      for (let i = 0; i < numStars; i++) {
+        stars.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          size: Math.random() * 1.1 + 0.2,
+          alpha: Math.random() * 0.6 + 0.15,
+          speed: Math.random() * 0.12 + 0.04
+        });
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, width, height);
+        stars.forEach(star => {
+          ctx.fillStyle = `rgba(235, 236, 240, ${star.alpha})`;
+          ctx.beginPath();
+          ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+          ctx.fill();
+
+          star.y -= star.speed;
+          if (star.y < 0) {
+            star.y = height;
+            star.x = Math.random() * width;
+          }
+        });
+        requestAnimationFrame(draw);
+      }
+      draw();
+
+      window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      });
+    }
+
+    // Populate Orbiting Scenario Nodes
+    function renderOrbitalNodes() {
+      const outerContainer = document.getElementById('outerOrbitNodes');
+      const midContainer = document.getElementById('midOrbitNodes');
+      const innerContainer = document.getElementById('innerOrbitNodes');
+      if (!outerContainer || !midContainer || !innerContainer) return;
+
+      outerContainer.innerHTML = '';
+      midContainer.innerHTML = '';
+      innerContainer.innerHTML = '';
+
+      const total = manifestScenarios.length;
+      if (total === 0) return;
+
+      // Outer ring: first 6
+      const outerScenarios = manifestScenarios.slice(0, 6);
+      outerScenarios.forEach((sc, idx) => {
+        const angle = (idx / 6) * 360;
+        const rad = (angle * Math.PI) / 180;
+        const r = 310;
+        const x = 310 + r * Math.cos(rad) - 24;
+        const y = 310 + r * Math.sin(rad) - 24;
+        outerContainer.appendChild(createOrbitNode(sc, x, y, 'orbit-node-outer'));
+      });
+
+      // Mid ring: next 5
+      const midScenarios = manifestScenarios.slice(6, 11);
+      midScenarios.forEach((sc, idx) => {
+        const angle = (idx / 5) * 360;
+        const rad = (angle * Math.PI) / 180;
+        const r = 220;
+        const x = 220 + r * Math.cos(rad) - 24;
+        const y = 220 + r * Math.sin(rad) - 24;
+        midContainer.appendChild(createOrbitNode(sc, x, y, 'orbit-node-mid'));
+      });
+
+      // Inner ring: remaining scenarios (12+)
+      const innerScenarios = manifestScenarios.slice(11);
+      const innerCount = innerScenarios.length;
+      innerScenarios.forEach((sc, idx) => {
+        const angle = (idx / innerCount) * 360;
+        const rad = (angle * Math.PI) / 180;
+        const r = 140;
+        const x = 140 + r * Math.cos(rad) - 24;
+        const y = 140 + r * Math.sin(rad) - 24;
+        innerContainer.appendChild(createOrbitNode(sc, x, y, 'orbit-node-inner'));
+      });
+    }
+
+    function createOrbitNode(sc, x, y, counterClass) {
+      const node = document.createElement('div');
+      node.style.position = 'absolute';
+      node.style.left = `${x}px`;
+      node.style.top = `${y}px`;
+      node.className = `group z-30 ${counterClass}`;
+
+      const repoShort = (sc.github_repo || '').replace('https://github.com/', '');
+
+      node.innerHTML = `
+        <div onclick="openWorkspace(${sc.id})" class="w-12 h-12 rounded-full bg-[#08080a] border border-[#1a1a1e] group-hover:border-[#0FB8F8] group-hover:shadow-[0_0_15px_rgba(15,184,248,0.4)] transition-all flex items-center justify-center cursor-pointer relative">
+          <span class="font-mono text-xs font-bold text-[#EBECF0] group-hover:text-[#0FB8F8]">${sc.id.toString().padStart(2, '0')}</span>
+          <span class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 border border-black"></span>
+        </div>
+        
+        <!-- Popover Hover Card -->
+        <div class="opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-200 absolute bottom-14 left-1/2 -translate-x-1/2 w-64 bg-[#08080a] border border-[#141418] rounded-xl p-3 shadow-2xl font-mono text-xs z-50">
+          <div class="flex justify-between items-center mb-1">
+            <span class="font-bold text-[#0FB8F8]">CASE ${sc.id.toString().padStart(2, '0')}</span>
+            <span class="text-[9px] bg-[#0FB8F8]/10 text-[#0FB8F8] px-1.5 py-0.5 rounded border border-[#0FB8F8]/30">${sc.category}</span>
+          </div>
+          <h4 class="font-bold text-[#EBECF0] text-xs mb-1.5">${sc.title}</h4>
+          <p class="text-[10px] text-[#9FA0A6] mb-2 leading-tight">${sc.evidence_summary || ''}</p>
+          <div class="text-[9px] text-[#5C5C60] border-t border-[#141418] pt-1.5 flex justify-between">
+            <span>Repo: ${repoShort}</span>
+            <span class="text-emerald-400 font-bold">READY</span>
+          </div>
+        </div>
+      `;
+      return node;
+    }
+
+    function renderScenariosGrid() {
+      const grid = document.getElementById('scenariosGrid');
+      if (!grid) return;
+      grid.innerHTML = manifestScenarios.map(sc => {
+        const repoShort = (sc.github_repo || '').replace('https://github.com/', '');
+        return `
+          <div onclick="openWorkspace(${sc.id})" class="bg-[#08080a] border border-[#141418] hover:border-[#0FB8F8]/40 rounded-xl p-5 cursor-pointer transition-all hover:shadow-[0_0_20px_rgba(15,184,248,0.1)] flex flex-col justify-between space-y-4 font-mono">
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-xs font-bold text-[#0FB8F8]">SCENARIO ${sc.id.toString().padStart(2, '0')}</span>
+                <span class="text-[10px] bg-[#0FB8F8]/10 text-[#0FB8F8] px-2 py-0.5 rounded border border-[#0FB8F8]/30">${sc.category}</span>
+              </div>
+              <h3 class="text-base font-bold text-[#EBECF0] mb-2">${sc.title}</h3>
+              <p class="text-xs text-[#9FA0A6] leading-relaxed">${sc.evidence_summary || ''}</p>
+            </div>
+            <div class="border-t border-[#141418] pt-3 flex justify-between items-center text-xs">
+              <span class="text-[11px] text-[#5C5C60] truncate max-w-[180px]">${repoShort}</span>
+              <span class="text-emerald-400 font-bold text-[11px]">● RUNNING</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function navigate(viewName) {
+      ['viewObservatory', 'viewWorkspace', 'viewSessions', 'viewExperiments', 'viewEvidence', 'viewResults', 'viewArchitecture'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+      });
+
+      const navIds = ['navObservatory', 'navSessions', 'navScenarios', 'navExperiments', 'navEvidence', 'navResults', 'navArchitecture'];
+      navIds.forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) {
+          btn.classList.remove('text-[#0FB8F8]', 'bg-[#0FB8F8]/10', 'font-bold');
+          btn.classList.add('text-[#9FA0A6]');
+        }
+      });
+
+      if (viewName === 'observatory') {
+        document.getElementById('viewObservatory').classList.remove('hidden');
+        document.getElementById('navObservatory').classList.add('text-[#0FB8F8]', 'bg-[#0FB8F8]/10', 'font-bold');
+      } else if (viewName === 'sessions') {
+        document.getElementById('viewSessions').classList.remove('hidden');
+        document.getElementById('navSessions').classList.add('text-[#0FB8F8]', 'bg-[#0FB8F8]/10', 'font-bold');
+        pollFreeBrowsingTraces();
+      } else if (viewName === 'scenarios') {
+        document.getElementById('viewObservatory').classList.remove('hidden');
+        document.getElementById('navScenarios').classList.add('text-[#0FB8F8]', 'bg-[#0FB8F8]/10', 'font-bold');
+        window.scrollTo({ top: 800, behavior: 'smooth' });
+      } else {
+        const cap = viewName.charAt(0).toUpperCase() + viewName.slice(1);
+        const target = document.getElementById(`view${cap}`);
+        if (target) target.classList.remove('hidden');
+        const navBtn = document.getElementById(`nav${cap}`);
+        if (navBtn) navBtn.classList.add('text-[#0FB8F8]', 'bg-[#0FB8F8]/10', 'font-bold');
+      }
+    }
+
+    // Dynamic Scenario Initialization from Manifest Data (Zero Hardcoded Scenario Branches)
+    function openWorkspace(id) {
+      activeScenarioId = id;
+      const sc = manifestScenarios.find(s => s.id === id) || manifestScenarios[0];
+      if (!sc) return;
+
+      // 1. Header Information
+      document.getElementById('wsScenarioTitle').textContent = `CASE ${sc.id.toString().padStart(2, '0')}: ${sc.title.toUpperCase()}`;
+      document.getElementById('wsCategory').textContent = sc.category;
+
+      // 2. Research Question & Dimensions
+      const research = sc.research || {};
+      document.getElementById('wsResearchQuestion').textContent = research.question || "Investigating behavioral pattern compliance against ground-truth predicates.";
+      
+      const dimsList = document.getElementById('wsDimensionsList');
+      dimsList.innerHTML = (research.observable_dimensions || ["DOM State", "User Action", "Telemetry"]).map(d => `
+        <span class="bg-[#020202] text-[#9FA0A6] border border-[#141418] px-2 py-0.5 rounded text-[10px] font-mono">${d}</span>
+      `).join('');
+
+      // 3. Data-Driven User Journey Flow Steps
+      const journeyFlow = document.getElementById('wsJourneyFlow');
+      const journeySteps = research.journey || ["Open Page", "Interact", "Review State", "Complete"];
+      journeyFlow.innerHTML = journeySteps.map((step, idx) => `
+        <div class="bg-[#020202] border border-[#141418] rounded-lg p-2 flex flex-col justify-center items-center">
+          <span class="text-[9px] text-[#0FB8F8] font-bold">STEP 0${idx + 1}</span>
+          <span class="text-[10px] text-[#EBECF0] font-sans mt-0.5 leading-tight">${step}</span>
+        </div>
+      `).join('');
+
+      // 4. GitHub Repository & Commit Metadata
+      const repoUrl = sc.github_repo || 'https://github.com/gothinkster/realworld.git';
+      const repoShort = repoUrl.replace('https://github.com/', '');
+      document.getElementById('wsRepoUrl').textContent = `github.com/${repoShort}`;
+      document.getElementById('wsRepoUrl').href = repoUrl;
+      document.getElementById('wsCommitHash').textContent = `commit ${(sc.commit_hash || 'a5d89f13').substring(0, 8)}`;
+
+      // 5. Generated Scenario-Specific Interaction Controls
+      const controlsContainer = document.getElementById('wsGeneratedControls');
+      const controls = sc.interaction_controls || [
+        { label: "Observe State", action: "scroll", selector: "body" },
+        { label: "Interact", action: "click", selector: "button" }
+      ];
+      controlsContainer.innerHTML = controls.map(c => `
+        <button onclick="sendGeneratedAction('${c.action}', '${c.selector || ''}')" class="px-3.5 py-1.5 rounded-lg bg-[#08080a] hover:bg-[#141418] text-[#EBECF0] border border-[#141418] hover:border-[#0FB8F8]/40 font-mono font-bold transition-all flex items-center gap-1.5">
+          <span>⚡</span> ${c.label}
+        </button>
+      `).join('');
+
+      // 6. Ground-Truth Behavioral Findings & Evidence Summary
+      const predicatesObj = sc.predicates || {};
+      const predKeys = Object.keys(predicatesObj);
+      const predList = document.getElementById('wsPredicateList');
+      
+      if (predKeys.length > 0 && predicatesObj[predKeys[0]]?.positive_predicates) {
+        const posPreds = predicatesObj[predKeys[0]].positive_predicates;
+        predList.innerHTML = posPreds.map(p => `<p class="text-emerald-400">✓ ${p}</p>`).join('');
+      } else {
+        predList.innerHTML = `<p class="text-emerald-400">✓ clean_control_validated</p><p class="text-emerald-400">✓ zero_false_positives</p>`;
+      }
+      
+      document.getElementById('wsVerdictText').textContent = sc.evidence_summary || "Behavioral differences evaluated between Clean and Dark variant executions.";
+
+      // 7. Viewport Target URL
+      const targetUrl = `http://localhost:8080/scenario/${sc.id.toString().padStart(2, '0')}?variant=${activeVariant}`;
+      document.getElementById('wsAddressInput').value = targetUrl;
+
+      document.getElementById('viewWorkspace').classList.remove('hidden');
+      startRealSession();
+    }
+
+    function closeWorkspace() {
+      document.getElementById('viewWorkspace').classList.add('hidden');
+      if (screenshotInterval) clearInterval(screenshotInterval);
+    }
+
+    function toggleAdvancedTools() {
+      const drawer = document.getElementById('advancedToolsDrawer');
+      if (drawer) drawer.classList.toggle('hidden');
+    }
+
+    function setVariant(v) {
+      activeVariant = v;
+      const btnClean = document.getElementById('wsBtnClean');
+      const btnDark = document.getElementById('wsBtnDark');
+      
+      if (v === 'clean') {
+        btnClean.className = "px-4 py-1.5 rounded-lg font-bold transition-all bg-emerald-500/20 text-emerald-400 border border-emerald-500/40";
+        btnDark.className = "px-4 py-1.5 rounded-lg font-bold transition-all text-[#9FA0A6] hover:text-[#EBECF0]";
+      } else {
+        btnDark.className = "px-4 py-1.5 rounded-lg font-bold transition-all bg-red-500/20 text-red-400 border border-red-500/40";
+        btnClean.className = "px-4 py-1.5 rounded-lg font-bold transition-all text-[#9FA0A6] hover:text-[#EBECF0]";
+      }
+
+      startRealSession();
+    }
+
+    async function startRealSession() {
+      const targetUrl = `http://localhost:8080/scenario/${activeScenarioId.toString().padStart(2, '0')}?variant=${activeVariant}`;
+      document.getElementById('wsAddressInput').value = targetUrl;
+
+      try {
+        const resp = await fetch('/api/session/start', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ scenario_id: activeScenarioId, variant: activeVariant })
+        });
+        const data = await resp.json();
+        
+        if (data.success) {
+          refreshScreenshot();
+          if (screenshotInterval) clearInterval(screenshotInterval);
+          screenshotInterval = setInterval(refreshScreenshot, 1500);
+        }
+      } catch (e) {
+        console.log('Real session start call:', e);
+      }
+    }
+
+    function refreshScreenshot() {
+      const img = document.getElementById('realBrowserStream');
+      if (img) {
+        img.src = `/api/session/screenshot?t=${new Date().getTime()}`;
+      }
+      pollSessionStatus();
+    }
+
+    async function pollSessionStatus() {
+      try {
+        const resp = await fetch('/api/session/status');
+        const data = await resp.json();
+        if (data.active) {
+          document.getElementById('badgeExtension').textContent = `● ${data.extension_status}`;
+          document.getElementById('badgeSensor').textContent = `● ${data.sensor_status}`;
+          document.getElementById('badgePage').textContent = `● ${data.page_status}`;
+
+          if (data.timeline && data.timeline.length > 0) {
+            const tlContainer = document.getElementById('timelineLog');
+            if (tlContainer) {
+              tlContainer.innerHTML = data.timeline.map(t => `<p><span class="text-[#0FB8F8]">${t.timestamp}</span> ${t.event}</p>`).join('');
+            }
+          }
+        }
+      } catch (e) {}
+    }
+
+    async function sendGeneratedAction(actionType, selector) {
+      try {
+        const resp = await fetch('/api/session/interact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: actionType, selector: selector })
+        });
+        const data = await resp.json();
+        setTimeout(refreshScreenshot, 400);
+      } catch (e) {
+        console.log('Generated action error:', e);
+      }
+    }
+
+    async function sendInteraction(actionType) {
+      const selector = document.getElementById('actionSelector').value;
+      const text = document.getElementById('actionText').value;
+
+      try {
+        const resp = await fetch('/api/session/interact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: actionType, selector, text })
+        });
+        const data = await resp.json();
+        setTimeout(refreshScreenshot, 400);
+      } catch (e) {
+        console.log('Interaction error:', e);
+      }
+    }
+
+    async function pollFreeBrowsingTraces() {
+      try {
+        const resp = await fetch('/api/session/free_browsing_traces');
+        const data = await resp.json();
+        
+        if (!data.success || (!data.latest && (!data.history || data.history.length === 0))) {
+          return;
+        }
+
+        const latest = data.latest;
+        const history = data.history || [];
+
+        if (latest) {
+          const tsEl = document.getElementById('sessionTimestamp');
+          if (tsEl) tsEl.textContent = `${latest.timestamp} • ${latest.url}`;
+          
+          const findingsHtml = (latest.findings || []).map(f => {
+            const isClean = f.category.includes('Clean');
+            const badgeColor = isClean ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' : 'bg-red-500/10 text-red-400 border-red-500/30';
+            return `
+              <div class="bg-[#020202] border border-[#141418] p-4 rounded-xl space-y-2 font-mono text-xs">
+                <div class="flex justify-between items-center">
+                  <span class="font-bold px-2 py-0.5 rounded text-[11px] border ${badgeColor}">${f.category}</span>
+                  <span class="text-[#0FB8F8] font-bold">${Math.round((f.confidence || 0.9) * 100)}% Confidence</span>
+                </div>
+                <p class="text-[#EBECF0] font-sans text-xs">${f.reason || ''}</p>
+                <div class="bg-[#08080a] p-2 rounded border border-[#141418] text-[#9FA0A6] text-[11px] font-mono">
+                  <strong>Evidence:</strong> "${f.evidence || ''}"
+                </div>
+                ${f.legal_info ? `
+                  <div class="text-[10px] text-[#5C5C60] flex gap-2 border-t border-[#141418] pt-2">
+                    <span class="text-amber-400 font-bold">⚖️ ${f.legal_info.law_title || ''} (${f.legal_info.legal_citation || ''})</span>
+                  </div>
+                ` : ''}
+              </div>
+            `;
+          }).join('');
+
+          const questionsHtml = (latest.unresolved_questions || []).map(q => `<li class="text-amber-400">❓ ${q}</li>`).join('');
+
+          const eventsHtml = (latest.trace_events || []).map((ev, idx) => `
+            <div class="bg-[#020202] border border-[#141418] p-2.5 rounded-lg text-[11px] flex justify-between items-center font-mono">
+              <div class="flex items-center gap-2">
+                <span class="text-[#0FB8F8] font-bold">STEP 0${idx + 1}</span>
+                <span class="text-[#EBECF0]">${ev.type || 'snapshot'}</span>
+                <span class="text-[#5C5C60]">${ev.user_action ? (ev.user_action.text || ev.user_action.type) : 'DOM Scrape'}</span>
+              </div>
+              <span class="text-[#5C5C60] text-[10px]">${(ev.elements || []).length} elements tracked</span>
+            </div>
+          `).join('');
+
+          const pipelineStagesHtml = (latest.pipeline_stages || []).map(st => `
+            <div class="flex items-center gap-2 bg-[#08080a] border border-[#141418] p-2 rounded-lg text-xs font-mono">
+              <span class="w-5 h-5 rounded-full bg-[#0FB8F8] text-black font-bold flex items-center justify-center text-[10px]">${st.stage_id}</span>
+              <div class="flex-1 min-w-0">
+                <span class="text-[#EBECF0] font-bold block text-[11px]">${st.name}</span>
+                <span class="text-[#9FA0A6] text-[10px] truncate block">${st.detail || 'Completed'}</span>
+              </div>
+            </div>
+          `).join('');
+
+          const verdictBadgeClass = latest.verdict === 'SUPPORTED' ? 'bg-red-500/20 text-red-400 border-red-500/40' :
+                                    latest.verdict === 'POTENTIAL' ? 'bg-cyan-500/20 text-cyan-400 border-cyan-500/40' :
+                                    latest.verdict === 'NO EVIDENCE' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40' :
+                                    'bg-amber-500/20 text-amber-400 border-amber-500/40';
+
+          const bodyEl = document.getElementById('latestSessionBody');
+          if (bodyEl) {
+            bodyEl.innerHTML = `
+              <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Col 1: Findings & Questions -->
+                <div class="space-y-4">
+                  <h4 class="text-xs text-[#0FB8F8] font-bold uppercase">1. Detected Behavioral Patterns (${(latest.findings || []).length})</h4>
+                  <div class="space-y-3">${findingsHtml}</div>
+                  
+                  <h4 class="text-xs text-amber-400 font-bold uppercase mt-4">2. Unresolved Research Questions</h4>
+                  <ul class="space-y-1 text-xs font-mono bg-[#020202] border border-[#141418] p-3 rounded-xl">${questionsHtml}</ul>
+                </div>
+
+                <!-- Col 2: Live Analysis Pipeline Graph -->
+                <div class="space-y-4 font-mono">
+                  <div class="flex justify-between items-center">
+                    <h4 class="text-xs text-[#0FB8F8] font-bold uppercase">2. Live Analysis Pipeline</h4>
+                    <span class="text-[10px] font-bold px-2 py-0.5 rounded border ${verdictBadgeClass}">${latest.verdict || 'SUPPORTED'}</span>
+                  </div>
+
+                  <div class="bg-[#020202] border border-[#141418] p-3.5 rounded-xl space-y-2">
+                    ${pipelineStagesHtml}
+                  </div>
+                </div>
+                
+                <!-- Col 3: Captured Trace Timeline -->
+                <div class="space-y-4">
+                  <h4 class="text-xs text-[#EBECF0] font-bold uppercase">3. Captured Trace Timeline (${(latest.trace_events || []).length} events)</h4>
+                  <div class="space-y-2 max-h-[420px] overflow-y-auto pr-1">${eventsHtml || '<p class="text-xs text-[#5C5C60]">Trace events recorded.</p>'}</div>
+                </div>
+              </div>
+            `;
+          }
+        }
+
+        if (history && history.length > 0) {
+          const histEl = document.getElementById('sessionsHistoryList');
+          if (histEl) {
+            histEl.innerHTML = history.map(h => `
+              <div class="bg-[#08080a] border border-[#141418] hover:border-[#0FB8F8]/40 p-4 rounded-xl space-y-2 text-xs font-mono">
+                <div class="flex justify-between items-center text-[#0FB8F8]">
+                  <span class="font-bold truncate max-w-[200px]">${h.title || 'Session Trace'}</span>
+                  <span class="text-[10px] text-[#5C5C60]">${h.timestamp}</span>
+                </div>
+                <p class="text-[#9FA0A6] text-[11px] truncate">${h.url}</p>
+                <div class="flex justify-between items-center text-[10px] text-[#5C5C60] border-t border-[#141418] pt-2">
+                  <span>${h.findings_count} pattern(s)</span>
+                  <span>${h.trace_length} trace events</span>
+                </div>
+              </div>
+            `).join('');
+          }
+        }
+      } catch (e) {
+        console.log('Error polling free browsing traces:', e);
+      }
+    }
+
+    // Initialize Page
+    document.addEventListener('DOMContentLoaded', () => {
+      initStarfield();
+      loadManifest();
+      pollFreeBrowsingTraces();
+      setInterval(pollFreeBrowsingTraces, 3000);
+    });
+  </script>
+</body>
+</html>

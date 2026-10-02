@@ -1,0 +1,28 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Environment and Credentials
+.env
+.env.*
+*.pem
+*.key
+
+# Model Binaries & Checkpoints (>100MB)
+model/distilbert_dark_pattern/*.safetensors
+model/distilbert_dark_pattern/*.bin
+results/checkpoint-*/
+
+# Runtime & Cloned Repositories
+runtime/
+simulator/repos/
+simulator/scenarios/*/node_modules/
+node_modules/
+
+# Logs & Temporary Files
+*.log
+.vscode/
+.idea/
+*.swp

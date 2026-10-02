@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Executive Dashboard — Multi-Modal Dark Pattern Detector</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #0f172a; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    .card-dark { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 20px; margin-bottom: 20px; }
+    .risk-score-badge { font-size: 48px; font-weight: 800; }
+    .text-muted-custom { color: #94a3b8; }
+    .badge-cat { font-size: 12px; padding: 5px 10px; border-radius: 4px; }
+    .btn-gradient { background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; font-weight: 600; border: none; }
+    .btn-gradient:hover { background: linear-gradient(135deg, #1d4ed8, #1e40af); color: white; }
+    pre { background: #090d16; padding: 10px; border-radius: 6px; color: #38bdf8; font-size: 12px; }
+  </style>
+</head>
+<body>
+
+<div class="container-fluid py-4 px-5">
+  
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
+    <div>
+      <h2 class="fw-bold m-0">🕵️ Multi-Modal Dark Pattern Detector</h2>
+      <small class="text-muted-custom">Executive AI Analytics & Compliance Dashboard v3.0</small>
+    </div>
+    <div>
+      <span class="badge bg-success px-3 py-2">● API Server Online</span>
+      <span class="badge bg-primary px-3 py-2 ms-2">DistilBERT Multi-Label Engine</span>
+    </div>
+  </div>
+
+  <!-- Top Metrics Row -->
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card-dark text-center">
+        <div class="text-muted-custom text-uppercase small font-weight-bold">Risk Assessment Score</div>
+        <div class="risk-score-badge text-danger" id="riskScoreVal">0/100</div>
+        <div class="fw-bold" id="riskLevelVal">LOW RISK</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card-dark text-center">
+        <div class="text-muted-custom text-uppercase small font-weight-bold">Total Violations</div>
+        <div class="risk-score-badge text-warning" id="totalViolationsVal">0</div>
+        <small class="text-muted-custom">Patterns Identified</small>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card-dark text-center">
+        <div class="text-muted-custom text-uppercase small font-weight-bold">Active Modalities</div>
+        <div class="risk-score-badge text-info">3</div>
+        <small class="text-muted-custom">DOM · Vision · Voice</small>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card-dark text-center">
+        <div class="text-muted-custom text-uppercase small font-weight-bold">Supported Categories</div>
+        <div class="risk-score-badge text-success">7</div>
+        <small class="text-muted-custom">FTC / DSA Compliant</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Sandbox Controls -->
+  <div class="row">
+    <div class="col-md-5">
+      <div class="card-dark">
+        <h5 class="fw-bold mb-3">⚡ Live Multi-Modal Scan Sandbox</h5>
+        <div class="mb-3">
+          <label class="form-label text-muted-custom">Target URL</label>
+          <input type="text" id="inputUrl" class="form-control bg-dark text-light border-secondary" value="https://example-ecommerce-checkout.com">
+        </div>
+        <div class="mb-3">
+          <label class="form-label text-muted-custom">Test Sample Texts (1 per line)</label>
+          <textarea id="inputText" class="form-control bg-dark text-light border-secondary" rows="5">Hurry! Only 2 left in stock!
+Add 2-year protection warranty for $19.99 (Checked by default)
+No thanks, I don't want to save money
+*Mandatory service fee of $5.99 added at payment step</textarea>
+        </div>
+        <div class="mb-3">
+          <label class="form-label text-muted-custom">Upload Screenshot (Vision Branch)</label>
+          <input type="file" id="inputScreenshot" class="form-control bg-dark text-light border-secondary" accept="image/*">
+        </div>
+        <div class="d-flex gap-2">
+          <button id="runScanBtn" class="btn btn-gradient flex-grow-1">🔍 Run Multi-Modal Scan</button>
+          <button id="exportReportBtn" class="btn btn-outline-light">📄 Export Audit Report</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Table -->
+    <div class="col-md-7">
+      <div class="card-dark">
+        <h5 class="fw-bold mb-3">📋 Real-Time Compliance Audit Results</h5>
+        <div class="table-responsive" style="max-height: 400px;">
+          <table class="table table-dark table-hover text-light align-middle" id="resultsTable">
+            <thead>
+              <tr class="text-muted-custom">
+                <th>Category</th>
+                <th>Conf.</th>
+                <th>Modalities</th>
+                <th>Evidence / Law Citation</th>
+              </tr>
+            </thead>
+            <tbody id="resultsTbody">
+              <tr>
+                <td colspan="4" class="text-center text-muted-custom py-4">Click <strong>Run Multi-Modal Scan</strong> to run analysis.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  document.getElementById('runScanBtn').addEventListener('click', runScan);
+  document.getElementById('exportReportBtn').addEventListener('click', exportReport);
+
+  async function runScan() {
+    const url = document.getElementById('inputUrl').value;
+    const textsRaw = document.getElementById('inputText').value.split('\n').filter(t => t.trim());
+    const fileInput = document.getElementById('inputScreenshot');
+
+    let screenshot_base64 = "";
+    if (fileInput.files.length > 0) {
+      screenshot_base64 = await fileToBase64(fileInput.files[0]);
+    }
+
+    const payload = {
+      texts: textsRaw,
+      url: url,
+      screenshot_base64: screenshot_base64,
+      threshold: 0.50
+    };
+
+    try {
+      const res = await fetch('/detect', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await res.json();
+      renderResults(data);
+    } catch (e) {
+      alert("Scan failed: " + e.message);
+    }
+  }
+
+  function renderResults(data) {
+    const tbody = document.getElementById('resultsTbody');
+    tbody.innerHTML = '';
+
+    const findings = data.findings || [];
+    document.getElementById('totalViolationsVal').textContent = findings.length;
+
+    if (findings.length > 0) {
+      document.getElementById('riskScoreVal').textContent = Math.min(100, findings.length * 25) + "/100";
+      document.getElementById('riskLevelVal').textContent = findings.length >= 3 ? "CRITICAL RISK" : "HIGH RISK";
+    } else {
+      document.getElementById('riskScoreVal').textContent = "0/100";
+      document.getElementById('riskLevelVal').textContent = "LOW RISK";
+    }
+
+    if (findings.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="4" class="text-center text-success py-4">✅ Page appears clean and compliant!</td></tr>';
+      return;
+    }
+
+    findings.forEach(f => {
+      const conf = Math.round(f.confidence * 100);
+      const ev = Array.isArray(f.evidence) ? f.evidence.join(' · ') : f.evidence;
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><span class="badge bg-danger badge-cat">${f.category}</span></td>
+        <td><strong>${conf}%</strong></td>
+        <td><small class="text-info">${f.modalities.join(', ')}</small></td>
+        <td>
+          <div class="fw-bold">${escapeHtml(ev)}</div>
+          <small class="text-muted-custom">${escapeHtml(f.reason || '')}</small>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  async function exportReport() {
+    const url = document.getElementById('inputUrl').value;
+    const textsRaw = document.getElementById('inputText').value.split('\n').filter(t => t.trim());
+
+    const res = await fetch('/report', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ texts: textsRaw, url: url, threshold: 0.50 })
+    });
+
+    const htmlStr = await res.text();
+    const win = window.open('', '_blank');
+    win.document.write(htmlStr);
+    win.document.close();
+  }
+
+  function fileToBase64(file) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+    });
+  }
+
+  function escapeHtml(str) {
+    return str ? String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') : '';
+  }
+</script>
+
+</body>
+</html>

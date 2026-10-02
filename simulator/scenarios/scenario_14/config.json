@@ -1,0 +1,15 @@
+{
+  "id": 14,
+  "slug": "scenario_14",
+  "title": "Clean Control Baseline",
+  "category": "Control Baseline",
+  "dark_patterns": [],
+  "predicates": {},
+  "github_repo": "https://github.com/h5bp/html5-boilerplate.git",
+  "commit_hash": "e12a4b8905391d1e6702c2f109289871bb219802",
+  "variant_urls": {
+    "dark": "http://localhost:8080/scenario/14?variant=dark",
+    "clean": "http://localhost:8080/scenario/14?variant=clean"
+  },
+  "description": "Fully transparent, clean control store without any deceptive UI patterns (used for false-positive validation)."
+}

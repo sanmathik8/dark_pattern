@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scenario 08: Food Delivery App</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 24px; }
+        .app-container { max-width: 750px; margin: 0 auto; background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 28px; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+        .header { border-bottom: 1px solid #334155; padding-bottom: 16px; margin-bottom: 24px; flex justify-content: space-between; items-center; }
+        .badge { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .badge-dark { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+        .badge-clean { background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.4); }
+        .btn { display: inline-block; padding: 10px 20px; font-size: 14px; font-weight: 600; border-radius: 6px; border: none; cursor: pointer; transition: all 0.2s; }
+        .btn-primary { background: #3b82f6; color: white; }
+        .btn-primary:hover { background: #2563eb; }
+        .btn-success { background: #22c55e; color: white; }
+        .btn-muted { background: #475569; color: #94a3b8; }
+        .card { background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+        .input-group { margin-bottom: 16px; }
+        .input-group label { display: block; font-size: 13px; color: #cbd5e1; margin-bottom: 6px; }
+        .input-group input[type="text"], .input-group input[type="email"] { width: 100%; padding: 8px 12px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: white; box-sizing: border-box; }
+        .timer-banner { background: #ef4444; color: white; padding: 12px; text-align: center; font-weight: 700; border-radius: 8px; margin-bottom: 20px; }
+        .popup-banner { background: #ea580c; color: white; padding: 10px; border-radius: 6px; margin-bottom: 12px; font-size: 12px; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+
+        <div class="header">
+            <h2>Food Express — Order Checkout</h2>
+            <span class="badge badge-dark">DARK VARIANT</span>
+        </div>
+        <div class="card">
+            <h3>Order Summary</h3>
+            <p>Subtotal: $25.00</p>
+            <div class="input-group">
+                <label><input type="checkbox" checked id="tip"> 20% Courier Tip ($5.00) — <strong>Pre-selected</strong></label>
+            </div>
+            <div class="input-group">
+                <label><input type="checkbox" checked id="prio"> Priority Express Delivery ($2.99) — <strong>Pre-selected</strong></label>
+            </div>
+            <p style="font-size:11px;color:#f87171;">* Automated Platform Service Fee: $3.50</p>
+            <h3 style="color:#4ade80;">Total: $36.49</h3>
+            <button class="btn btn-success">Place Order ($36.49)</button>
+        </div>
+        
+    </div>
+</body>
+</html>

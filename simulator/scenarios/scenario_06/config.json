@@ -1,0 +1,27 @@
+{
+  "id": 6,
+  "slug": "scenario_06",
+  "title": "Cookie Consent Banner",
+  "category": "Privacy Consent",
+  "dark_patterns": [
+    "visual_asymmetry"
+  ],
+  "predicates": {
+    "visual_asymmetry": {
+      "positive_predicates": [
+        "cta_contrast_asymmetry",
+        "deemphasized_decline_option"
+      ],
+      "negative_predicates": [
+        "equal_button_symmetry_in_clean"
+      ]
+    }
+  },
+  "github_repo": "https://github.com/jakearchibald/idb.git",
+  "commit_hash": "a4f891b29d10e82c50a0f9b33a7e289192468ab0",
+  "variant_urls": {
+    "dark": "http://localhost:8080/scenario/06?variant=dark",
+    "clean": "http://localhost:8080/scenario/06?variant=clean"
+  },
+  "description": "Consent overlay with a prominent bright green 'ACCEPT ALL' button vs a low-contrast tiny decline link."
+}

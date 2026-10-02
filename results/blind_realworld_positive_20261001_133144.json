@@ -1,0 +1,73 @@
+{
+  "target_url": "https://saucedemo.com",
+  "mode": "any_website",
+  "scenario_id": null,
+  "ground_truth_before_test": null,
+  "pattern_hint_before_test": null,
+  "interactions": [
+    {
+      "id": "int_pub_1790861519_1",
+      "action": "login"
+    },
+    {
+      "id": "int_pub_1790861521_2",
+      "action": "add_to_cart"
+    }
+  ],
+  "evidence": [
+    {
+      "before_state": {
+        "title": "Swag Labs",
+        "url": "https://www.saucedemo.com/",
+        "buttons": [
+          {
+            "text": "Login",
+            "id": "login-button"
+          }
+        ],
+        "inputs": [
+          {
+            "id": "user-name",
+            "type": "text",
+            "value": "",
+            "checked": false
+          },
+          {
+            "id": "password",
+            "type": "password",
+            "value": "",
+            "checked": false
+          },
+          {
+            "id": "login-button",
+            "type": "submit",
+            "value": "Login",
+            "checked": false
+          }
+        ],
+        "bodyTextSnippet": "Swag Labs Accepted usernames are: standard_user locked_out_user problem_user performance_glitch_user error_user visual_user Password for all users: secret_sauce"
+      }
+    },
+    {
+      "inventory_state": {
+        "title": "Swag Labs",
+        "url": "https://www.saucedemo.com/",
+        "items": []
+      }
+    },
+    {
+      "after_state": {
+        "title": "Swag Labs",
+        "url": "https://www.saucedemo.com/",
+        "cartBadge": "0",
+        "bodyTextSnippet": "Swag Labs Accepted usernames are: standard_user locked_out_user problem_user performance_glitch_user error_user visual_user Password for all users: secret_sauce"
+      }
+    }
+  ],
+  "candidates": [
+    "Clean Control / Low Risk"
+  ],
+  "upf_verdict": "NO EVIDENCE",
+  "upf_result_frozen_at": "2026-10-01T13:31:44Z",
+  "screenshot_artifact": "D:\\darkpattern\\results\\blind_realworld_20261001_133144.jpg"
+}

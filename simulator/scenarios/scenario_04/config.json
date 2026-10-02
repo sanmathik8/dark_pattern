@@ -1,0 +1,27 @@
+{
+  "id": 4,
+  "slug": "scenario_04",
+  "title": "Streaming Subscription Free Trial",
+  "category": "Subscription",
+  "dark_patterns": [
+    "forced_continuity"
+  ],
+  "predicates": {
+    "forced_continuity": {
+      "positive_predicates": [
+        "hidden_auto_renewal",
+        "cancellation_barrier_fine_print"
+      ],
+      "negative_predicates": [
+        "transparent_cancellation_in_clean"
+      ]
+    }
+  },
+  "github_repo": "https://github.com/stripe-samples/checkout-single-subscription.git",
+  "commit_hash": "d1e7c53641f238ab90d3a958b1220a1122ab45e3",
+  "variant_urls": {
+    "dark": "http://localhost:8080/scenario/04?variant=dark",
+    "clean": "http://localhost:8080/scenario/04?variant=clean"
+  },
+  "description": "SaaS streaming subscription trial with hidden fine-print auto-renewal and phone-only cancellation notice."
+}

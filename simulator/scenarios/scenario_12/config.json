@@ -1,0 +1,27 @@
+{
+  "id": 12,
+  "slug": "scenario_12",
+  "title": "Product Page (Bait & Switch)",
+  "category": "E-Commerce",
+  "dark_patterns": [
+    "misdirection"
+  ],
+  "predicates": {
+    "misdirection": {
+      "positive_predicates": [
+        "advertised_vs_checkout_price_mismatch",
+        "unexplained_price_jump"
+      ],
+      "negative_predicates": [
+        "stable_price_in_clean"
+      ]
+    }
+  },
+  "github_repo": "https://github.com/facebook/react.git",
+  "commit_hash": "b26d8338e55c68f128d8b9d8858f9188e7b99a12",
+  "variant_urls": {
+    "dark": "http://localhost:8080/scenario/12?variant=dark",
+    "clean": "http://localhost:8080/scenario/12?variant=clean"
+  },
+  "description": "Product item page listing $49 price that automatically increases to $65 during checkout transition."
+}

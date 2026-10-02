@@ -1,0 +1,419 @@
+{
+  "overall": {
+    "tp": 16,
+    "fp": 8,
+    "fn": 0,
+    "tn": 172,
+    "precision_pct": 66.67,
+    "recall_pct": 100.0,
+    "f1_score": 0.8
+  },
+  "by_pattern": {
+    "scarcity_urgency": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "tn": 26,
+      "precision_pct": 100.0,
+      "recall_pct": 100.0,
+      "f1_score": 1.0
+    },
+    "hidden_delayed_costs": {
+      "tp": 3,
+      "fp": 5,
+      "fn": 0,
+      "tn": 20,
+      "precision_pct": 37.5,
+      "recall_pct": 100.0,
+      "f1_score": 0.545
+    },
+    "pre_selected_options": {
+      "tp": 3,
+      "fp": 1,
+      "fn": 0,
+      "tn": 24,
+      "precision_pct": 75.0,
+      "recall_pct": 100.0,
+      "f1_score": 0.857
+    },
+    "forced_continuity": {
+      "tp": 3,
+      "fp": 0,
+      "fn": 0,
+      "tn": 25,
+      "precision_pct": 100.0,
+      "recall_pct": 100.0,
+      "f1_score": 1.0
+    },
+    "confirmshaming": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "tn": 26,
+      "precision_pct": 100.0,
+      "recall_pct": 100.0,
+      "f1_score": 1.0
+    },
+    "visual_asymmetry": {
+      "tp": 1,
+      "fp": 2,
+      "fn": 0,
+      "tn": 25,
+      "precision_pct": 33.33,
+      "recall_pct": 100.0,
+      "f1_score": 0.5
+    },
+    "misdirection": {
+      "tp": 2,
+      "fp": 0,
+      "fn": 0,
+      "tn": 26,
+      "precision_pct": 100.0,
+      "recall_pct": 100.0,
+      "f1_score": 1.0
+    }
+  },
+  "by_scenario": [
+    {
+      "scenario_id": 1,
+      "scenario_name": "Flash-Sale Store",
+      "planted_patterns": [
+        "scarcity_urgency"
+      ],
+      "dark_variant": {
+        "status": "PASS",
+        "detected_patterns": [
+          "scarcity_urgency",
+          "hidden_delayed_costs"
+        ],
+        "explanations": [
+          "[SCARCITY_URGENCY] Live countdown timer / urgency pressure text present in DARK variant (['flash-sale apparel storedark variant\ud83d\udd25 hurry! flash sale ends in04:59minutes! only 2 items left at this price!premium wireless headphonesoriginal price: $120.00 | sale price:$49.00\ud83d\udd25 89 people added this to cart in the last 15 minutes!add to cart ($49.00)', '\ud83d\udd25 hurry! flash sale ends in04:59minutes! only 2 items left at this price!']) and absent in CLEAN variant.",
+          "[HIDDEN_DELAYED_COSTS] Mandatory unrequested fee or price jump ($70.0) introduced in DARK variant and absent in CLEAN variant."
+        ]
+      },
+      "clean_variant": {
+        "status": "CLEAN PASS",
+        "detected_patterns": [],
+        "explanations": [
+          "All behavioral predicates absent. Clean control baseline validated."
+        ]
+      }
+    },
+    {
+      "scenario_id": 2,
+      "scenario_name": "Multi-Step Checkout with Late Fees",
+      "planted_patterns": [
+        "hidden_delayed_costs"
+      ],
+      "dark_variant": {
+        "status": "PASS",
+        "detected_patterns": [
+          "hidden_delayed_costs"
+        ],
+        "explanations": [
+          "[HIDDEN_DELAYED_COSTS] Mandatory unrequested fee or price jump ($7.5) introduced in DARK variant and absent in CLEAN variant."
+        ]
+      },
+      "clean_variant": {
+        "status": "CLEAN PASS",
+        "detected_patterns": [],
+        "explanations": [
+          "All behavioral predicates absent. Clean control baseline validated."
+        ]
+      }
+    },
+    {
+      "scenario_id": 3,
+      "scenario_name": "Cart with Pre-Added Extras",
+      "planted_patterns": [
+        "pre_selected_options"
+      ],
+      "dark_variant": {
+        "status": "PASS",
+        "detected_patterns": [
+          "hidden_delayed_costs",
+          "pre_selected_options"
+        ],
+        "explanations": [
+          "[HIDDEN_DELAYED_COSTS] Mandatory unrequested fee or price jump ($24.98) introduced in DARK variant and absent in CLEAN variant.",
+          "[PRE_SELECTED_OPTIONS] Optional add-ons pre-selected by default in DARK variant (['w1', 'w2']) while CLEAN variant leaves them unchecked."
+        ]
+      },
+      "clean_variant": {
+        "status": "CLEAN PASS",
+        "detected_patterns": [],
+        "explanations": [
+          "All behavioral predicates absent. Clean control baseline validated."
+        ]
+      }
+    },
+    {
+      "scenario_id": 4,
+      "scenario_name": "Streaming Subscription Free Trial",
+      "planted_patterns": [
+        "forced_continuity"
+      ],
+      "dark_variant": {
+        "status": "PASS",
+        "detected_patterns": [
+          "hidden_delayed_costs",
+          "forced_continuity"
+        ],
+        "explanations": [
+          "[HIDDEN_DELAYED_COSTS] Mandatory unrequested fee or price jump ($20.0) introduced in DARK variant and absent in CLEAN variant.",
+          "[FORCED_CONTINUITY] Multi-step cancellation barrier or auto-renewal fine print present in DARK variant and absent in CLEAN variant."
+        ]
+      },
+      "clean_variant": {
+        "status": "CLEAN PASS",
+        "detected_patterns": [],
+        "explanations": [
+          "All behavioral predicates absent. Clean control baseline validated."
+        ]
+      }
+    },
+    {
+      "scenario_id": 5,
+      "scenario_name": "Multi-Step Cancellation Flow",
+      "planted_patterns": [
+        "forced_continuity",
+        "confirmshaming"
+      ],
+      "dark_variant": {
+        "status": "PASS",
+        "detected_patterns": [
+          "forced_continuity",
+          "confirmshaming",
+          "visual_asymmetry"
+        ],
+        "explanations": [
+          "[FORCED_CONTINUITY] Multi-step cancellation barrier or auto-renewal fine print present in DARK variant and absent in CLEAN variant.",
+          "[CONFIRMSHAMING] Guilt-inducing opt-out text present in DARK variant (['subscription management \u2014 step 1 of 4dark variantare you sure you want to give up your benefits?if you cancel now, you will lose access to 50,000+ exclusive courses!keep my subscription & save $5no thanks, i hate saving money and prefer overpaying', 'are you sure you want to give up your benefits?if you cancel now, you will lose access to 50,000+ exclusive courses!keep my subscription & save $5no thanks, i hate saving money and prefer overpaying', 'no thanks, i hate saving money and prefer overpaying']) while CLEAN variant uses neutral buttons.",
+          "[VISUAL_ASYMMETRY] Visual asymmetry present: bright green primary CTA vs low-contrast / tiny font decline link in DARK variant."
+        ]
+      },
+      "clean_variant": {
+        "status": "CLEAN PASS",
+        "detected_patterns": [],
+        "explanations": [
+          "All behavioral predicates absent. Clean control baseline validated."
+        ]
+      }
+    },
+    {
+      "scenario_id": 6,
+      "scenario_name": "Cookie Consent Banner",
+      "planted_patterns": [
+        "visual_asymmetry"
+      ],
+      "dark_variant": {
+        "status": "PASS",
+        "detected_patterns": [
+          "visual_asymmetry"
+        ],
+        "explanations": [
+          "[VISUAL_ASYMMETRY] Visual asymmetry present: bright green primary CTA vs low-contrast / tiny font decline link in DARK variant."
+        ]
+      },
+      "clean_variant": {
+        "status": "CLEAN PASS",
+        "detected_patterns": [],
+        "explanations": [
+          "All behavioral predicates absent. Clean control baseline validated."
+        ]
+      }
+    },
+    {
+      "scenario_id": 7,
+      "scenario_name": "Travel Booking Engine",
+      "planted_patterns": [
+        "scarcity_urgency",
+        "hidden_delayed_costs"
+      ],
+      "dark_variant": {
+        "status": "PASS",
+        "detected_patterns": [
+          "scarcity_urgency",
+          "hidden_delayed_costs"
+        ],
+        "explanations": [
+          "[SCARCITY_URGENCY] Live countdown timer / urgency pressure text present in DARK variant (['luxury beach resort \u2014 hotel bookingdark variant\ud83d\udd25 5 other travelers are looking at this room right now! only 1 room left at this price!deluxe ocean view suitenightly rate: $120.00 / night* mandatory resort & facility fee: $35.00/night added at checkouttotal: $155.00 / nightreserve room now ($155.00)', '\ud83d\udd25 5 other travelers are looking at this room right now! only 1 room left at this price!']) and absent in CLEAN variant.",
+          "[HIDDEN_DELAYED_COSTS] Mandatory unrequested fee or price jump ($0.0) introduced in DARK variant and absent in CLEAN variant."
+        ]
+      },
+      "clean_variant": {
+        "status": "CLEAN PASS",
+        "detected_patterns": [],
+        "explanations": [
+          "All behavioral predicates absent. Clean control baseline validated."
+        ]
+      }
+    },
+    {
+      "scenario_id": 8,
+      "scenario_name": "Food Delivery App",
+      "planted_patterns": [
+        "pre_selected_options",
+        "hidden_delayed_costs"
+      ],
+      "dark_variant": {
+        "status": "PASS",
+        "detected_patterns": [
+          "hidden_delayed_costs",
+          "pre_selected_options"
+        ],
+        "explanations": [
+          "[HIDDEN_DELAYED_COSTS] Mandatory unrequested fee or price jump ($8.5) introduced in DARK variant and absent in CLEAN variant.",
+          "[PRE_SELECTED_OPTIONS] Optional add-ons pre-selected by default in DARK variant (['tip', 'prio']) while CLEAN variant leaves them unchecked."
+        ]
+      },
+      "clean_variant": {
+        "status": "CLEAN PASS",
+        "detected_patterns": [],
+        "explanations": [
+          "All behavioral predicates absent. Clean control baseline validated."
+        ]
+      }
+    },
+    {
+      "scenario_id": 9,
+      "scenario_name": "SaaS Pricing & Billing",
+      "planted_patterns": [
+        "forced_continuity"
+      ],
+      "dark_variant": {
+        "status": "PASS",
+        "detected_patterns": [
+          "hidden_delayed_costs",
+          "pre_selected_options",
+          "forced_continuity"
+        ],
+        "explanations": [
+          "[HIDDEN_DELAYED_COSTS] Mandatory unrequested fee or price jump ($220.0) introduced in DARK variant and absent in CLEAN variant.",
+          "[PRE_SELECTED_OPTIONS] Optional add-ons pre-selected by default in DARK variant (['ann']) while CLEAN variant leaves them unchecked.",
+          "[FORCED_CONTINUITY] Multi-step cancellation barrier or auto-renewal fine print present in DARK variant and absent in CLEAN variant."
+        ]
+      },
+      "clean_variant": {
+        "status": "CLEAN PASS",
+        "detected_patterns": [],
+        "explanations": [
+          "All behavioral predicates absent. Clean control baseline validated."
+        ]
+      }
+    },
+    {
+      "scenario_id": 10,
+      "scenario_name": "Newsletter Modal Popup",
+      "planted_patterns": [
+        "confirmshaming"
+      ],
+      "dark_variant": {
+        "status": "PASS",
+        "detected_patterns": [
+          "confirmshaming",
+          "visual_asymmetry"
+        ],
+        "explanations": [
+          "[CONFIRMSHAMING] Guilt-inducing opt-out text present in DARK variant (['exclusive discount offerdark variantget 20% off your first order!subscribe to our vip newsletter now.get my 20% discountno thanks, i prefer paying full price and missing out on savings', 'get 20% off your first order!subscribe to our vip newsletter now.get my 20% discountno thanks, i prefer paying full price and missing out on savings', 'no thanks, i prefer paying full price and missing out on savings']) while CLEAN variant uses neutral buttons.",
+          "[VISUAL_ASYMMETRY] Visual asymmetry present: bright green primary CTA vs low-contrast / tiny font decline link in DARK variant."
+        ]
+      },
+      "clean_variant": {
+        "status": "CLEAN PASS",
+        "detected_patterns": [],
+        "explanations": [
+          "All behavioral predicates absent. Clean control baseline validated."
+        ]
+      }
+    },
+    {
+      "scenario_id": 11,
+      "scenario_name": "Software Download Portal",
+      "planted_patterns": [
+        "misdirection"
+      ],
+      "dark_variant": {
+        "status": "PASS",
+        "detected_patterns": [
+          "misdirection"
+        ],
+        "explanations": [
+          "[MISDIRECTION] Primary CTA misleads user to third-party toolbar or price increases upon adding to cart in DARK variant."
+        ]
+      },
+      "clean_variant": {
+        "status": "CLEAN PASS",
+        "detected_patterns": [],
+        "explanations": [
+          "All behavioral predicates absent. Clean control baseline validated."
+        ]
+      }
+    },
+    {
+      "scenario_id": 12,
+      "scenario_name": "Product Page (Bait & Switch)",
+      "planted_patterns": [
+        "misdirection"
+      ],
+      "dark_variant": {
+        "status": "PASS",
+        "detected_patterns": [
+          "hidden_delayed_costs",
+          "misdirection"
+        ],
+        "explanations": [
+          "[HIDDEN_DELAYED_COSTS] Mandatory unrequested fee or price jump ($16.0) introduced in DARK variant and absent in CLEAN variant.",
+          "[MISDIRECTION] Primary CTA misleads user to third-party toolbar or price increases upon adding to cart in DARK variant."
+        ]
+      },
+      "clean_variant": {
+        "status": "CLEAN PASS",
+        "detected_patterns": [],
+        "explanations": [
+          "All behavioral predicates absent. Clean control baseline validated."
+        ]
+      }
+    },
+    {
+      "scenario_id": 13,
+      "scenario_name": "Social Media Privacy Settings",
+      "planted_patterns": [
+        "pre_selected_options"
+      ],
+      "dark_variant": {
+        "status": "PASS",
+        "detected_patterns": [
+          "pre_selected_options"
+        ],
+        "explanations": [
+          "[PRE_SELECTED_OPTIONS] Optional add-ons pre-selected by default in DARK variant (['p1', 'p2', 'p3']) while CLEAN variant leaves them unchecked."
+        ]
+      },
+      "clean_variant": {
+        "status": "CLEAN PASS",
+        "detected_patterns": [],
+        "explanations": [
+          "All behavioral predicates absent. Clean control baseline validated."
+        ]
+      }
+    },
+    {
+      "scenario_id": 14,
+      "scenario_name": "Clean Control Baseline",
+      "planted_patterns": [],
+      "dark_variant": {
+        "status": "PASS",
+        "detected_patterns": [],
+        "explanations": []
+      },
+      "clean_variant": {
+        "status": "CLEAN PASS",
+        "detected_patterns": [],
+        "explanations": [
+          "All behavioral predicates absent. Clean control baseline validated."
+        ]
+      }
+    }
+  ]
+}

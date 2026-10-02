@@ -1,0 +1,65 @@
+{
+  "target_url": "https://demo.playwright.dev/todomvc/",
+  "mode": "any_website",
+  "scenario_id": null,
+  "ground_truth": null,
+  "pattern_hint": null,
+  "interactions": [
+    {
+      "id": "int_ext_pos_1790956758",
+      "action": "add_todo_item"
+    }
+  ],
+  "evidence": [
+    {
+      "before_state": {
+        "title": "React \u2022 TodoMVC",
+        "url": "https://demo.playwright.dev/todomvc/#/",
+        "inputs": [
+          {
+            "id": "el_0",
+            "tag": "INPUT",
+            "type": "text",
+            "checked": false
+          }
+        ],
+        "bodySnippet": "This is just a demo of TodoMVC for testing, not the real TodoMVC app. todos Double-click to edit a todo Created by Remo H. Jansen Part of TodoMVC"
+      }
+    },
+    {
+      "after_state": {
+        "title": "React \u2022 TodoMVC",
+        "url": "https://demo.playwright.dev/todomvc/#/",
+        "items": [
+          {
+            "id": "item_0",
+            "text": "",
+            "checked": false
+          },
+          {
+            "id": "item_1",
+            "text": "Research dark pattern benchmarks",
+            "checked": false
+          },
+          {
+            "id": "item_2",
+            "text": "",
+            "checked": false
+          }
+        ],
+        "bodySnippet": "This is just a demo of TodoMVC for testing, not the real TodoMVC app. todos Mark all as complete Research dark pattern benchmarks 1 item left All Active Completed Double-click to edit a todo Created"
+      }
+    },
+    {
+      "dom_diffs": [
+        "Added new user task item 'Research dark pattern benchmarks' to list"
+      ]
+    }
+  ],
+  "candidates": [
+    "Clean Control / Low Risk"
+  ],
+  "verdict": "NO EVIDENCE",
+  "timestamp": "2026-10-02T15:59:13Z",
+  "screenshot_artifact": "D:\\darkpattern\\results\\blind_external_positive_20261002_155913.jpg"
+}

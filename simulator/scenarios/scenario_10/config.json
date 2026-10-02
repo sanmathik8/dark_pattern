@@ -1,0 +1,26 @@
+{
+  "id": 10,
+  "slug": "scenario_10",
+  "title": "Newsletter Modal Popup",
+  "category": "Newsletter",
+  "dark_patterns": [
+    "confirmshaming"
+  ],
+  "predicates": {
+    "confirmshaming": {
+      "positive_predicates": [
+        "shaming_opt_out_text"
+      ],
+      "negative_predicates": [
+        "neutral_opt_out_in_clean"
+      ]
+    }
+  },
+  "github_repo": "https://github.com/jquery/jquery.git",
+  "commit_hash": "d1e7c53641f238ab90d3a958b1220a1122ab45e3",
+  "variant_urls": {
+    "dark": "http://localhost:8080/scenario/10?variant=dark",
+    "clean": "http://localhost:8080/scenario/10?variant=clean"
+  },
+  "description": "Modal promo popup using manipulative confirmshaming text on the opt-out button."
+}

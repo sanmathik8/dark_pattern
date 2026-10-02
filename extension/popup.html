@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UPF ● Universal Pattern Finder</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+
+    <!-- Header -->
+    <header>
+      <div class="header-left">
+        <h1>UPF ● Pattern Finder</h1>
+      </div>
+      <span class="status active" id="extStatus">● Ready</span>
+    </header>
+
+    <!-- Research Session Recording Toggle Card -->
+    <div class="session-card" id="sessionCard">
+      <div class="session-header">
+        <span class="session-label">FREE-BROWSING RESEARCH SESSION</span>
+        <span class="recording-badge hidden" id="recordingBadge">● RECORDING</span>
+      </div>
+      <button id="sessionToggleBtn" class="btn btn-session-start">
+        🔴 START RESEARCH SESSION
+      </button>
+      <div class="session-metrics hidden" id="sessionMetrics">
+        <span id="sessionTimer">00:00</span>
+        <span class="dot">•</span>
+        <span id="sessionEventCount">0 events recorded</span>
+      </div>
+    </div>
+
+    <!-- Backend Status Bar -->
+    <div class="backend-bar" id="backendBar">
+      <div class="backend-info">
+        <span class="backend-dot" id="backendDot">●</span>
+        <span class="backend-label" id="backendLabel">Checking backend…</span>
+      </div>
+      <span class="model-badge" id="modelBadge">UPF Sensor v2</span>
+    </div>
+
+    <!-- Live Behavioral Analysis Pipeline Graph -->
+    <div id="pipelineGraphCard" class="pipeline-card hidden">
+      <div class="pipeline-header">
+        <span class="pipeline-title">⚡ LIVE BEHAVIORAL ANALYSIS PIPELINE</span>
+        <span class="verdict-badge badge-pending" id="pipelineVerdictBadge">PENDING</span>
+      </div>
+
+      <div class="pipeline-flow" id="pipelineFlow">
+        <div class="pipeline-stage-row" id="stageRow_1">
+          <span class="stage-step">1</span>
+          <span class="stage-name">INTERACTION DETECTED</span>
+          <span class="stage-detail" id="stageDetail_1">Waiting for action...</span>
+        </div>
+        <div class="pipeline-stage-row" id="stageRow_2">
+          <span class="stage-step">2</span>
+          <span class="stage-name">CAPTURE BEFORE STATE</span>
+          <span class="stage-detail" id="stageDetail_2">Pending DOM capture</span>
+        </div>
+        <div class="pipeline-stage-row" id="stageRow_3">
+          <span class="stage-step">3</span>
+          <span class="stage-name">ACTION ANALYSIS</span>
+          <span class="stage-detail" id="stageDetail_3">Target element inspect</span>
+        </div>
+        <div class="pipeline-stage-row" id="stageRow_4">
+          <span class="stage-step">4</span>
+          <span class="stage-name">CAPTURE AFTER STATE</span>
+          <span class="stage-detail" id="stageDetail_4">Post state capture</span>
+        </div>
+        
+        <!-- Stage 5 Parallel Branches -->
+        <div class="pipeline-branches">
+          <div class="branch-pill" id="branch_dom">DOM DIFF</div>
+          <div class="branch-pill" id="branch_net">NETWORK</div>
+          <div class="branch-pill" id="branch_sto">STORAGE</div>
+        </div>
+
+        <div class="pipeline-stage-row" id="stageRow_6">
+          <span class="stage-step">6</span>
+          <span class="stage-name">PATTERN ANALYSIS</span>
+          <span class="stage-detail" id="stageDetail_6">Evaluating predicates...</span>
+        </div>
+        <div class="pipeline-stage-row" id="stageRow_7">
+          <span class="stage-step">7</span>
+          <span class="stage-name">EVIDENCE FUSION</span>
+          <span class="stage-detail" id="stageDetail_7">Fusing state evidence...</span>
+        </div>
+        
+        <div class="pipeline-result-row" id="pipelineResultRow">
+          <span class="result-title">VERDICT:</span>
+          <span class="result-badge badge-pending" id="pipelineVerdictText">PENDING</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat-item">
+        <span class="stat-label">Patterns Detected</span>
+        <span class="stat-value danger" id="patternCount">–</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Observation Mode</span>
+        <span class="stat-value" id="modalityCount">DOM · Action · State</span>
+      </div>
+      <div class="stat-item full-width">
+        <span class="stat-label">Target Page</span>
+        <span class="stat-value small" id="pageTitle">Loading…</span>
+      </div>
+    </div>
+
+    <!-- Findings & Evidence Container -->
+    <div id="findingsContainer" class="findings-container">
+      <div class="empty-state">
+        <div class="empty-icon">🔬</div>
+        <p>No research session active.</p>
+        <p class="sub-text">Click <strong>START RESEARCH SESSION</strong>, browse normally, then stop to analyze traces.</p>
+      </div>
+    </div>
+
+    <!-- Unresolved Questions Panel -->
+    <div id="unresolvedPanel" class="unresolved-panel hidden">
+      <div class="unresolved-title">❓ Unresolved Research Questions</div>
+      <ul id="unresolvedList" class="unresolved-list"></ul>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button id="scanBtn" class="btn btn-primary">🔍 Quick Scan Page</button>
+      <button id="clearBtn" class="btn btn-secondary">✖ Clear Overlay</button>
+    </div>
+
+    <!-- Settings -->
+    <div class="settings">
+      <label>
+        <input type="checkbox" id="autoScan" checked>
+        Auto-observe page DOM
+      </label>
+      <span class="version">UPF v3.0 MV3</span>
+    </div>
+
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

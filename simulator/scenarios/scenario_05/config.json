@@ -1,0 +1,35 @@
+{
+  "id": 5,
+  "slug": "scenario_05",
+  "title": "Multi-Step Cancellation Flow",
+  "category": "Cancellation",
+  "dark_patterns": [
+    "forced_continuity",
+    "confirmshaming"
+  ],
+  "predicates": {
+    "forced_continuity": {
+      "positive_predicates": [
+        "multi_step_cancellation_barrier"
+      ],
+      "negative_predicates": [
+        "direct_cancellation_in_clean"
+      ]
+    },
+    "confirmshaming": {
+      "positive_predicates": [
+        "guilt_inducing_opt_out_text"
+      ],
+      "negative_predicates": [
+        "neutral_buttons_in_clean"
+      ]
+    }
+  },
+  "github_repo": "https://github.com/expressjs/express.git",
+  "commit_hash": "7b0d2d34a45c388277c0147986708b79d2b2a67e",
+  "variant_urls": {
+    "dark": "http://localhost:8080/scenario/05?variant=dark",
+    "clean": "http://localhost:8080/scenario/05?variant=clean"
+  },
+  "description": "4-step cancellation wizard featuring confirmation barriers and confirmshaming language ('No thanks, I hate saving money')."
+}
