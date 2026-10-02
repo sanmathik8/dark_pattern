@@ -38,12 +38,12 @@
 ## B. Work Partially Completed
 
 1. **Vision Branch (`backend/image_branch.py`)**:
-   - Structural implementation exists for image processing and screenshot analysis.
-   - External vision API calls (OpenAI/Gemini/Anthropic) are currently stubbed/placeholder functions fallbacking to DOM/text analysis when vision API keys are omitted.
+   - Structural code and API response schemas exist for screenshot analysis.
+   - External vision LLM API calls (OpenAI/Gemini/Anthropic) are currently stubbed placeholders that fallback to DOM/text analysis when API keys are absent.
 
 2. **Voice Branch (`backend/voice_branch.py`)**:
    - Audio file upload and transcription pipeline structures exist.
-   - Speech-to-text / audio pattern detection is partially implemented with mock signal placeholders.
+   - Speech-to-text / audio pattern detection is stubbed with mock signal placeholders.
 
 3. **Git Checkout Environment Manager (`simulator/core/git_environment.py`)**:
    - Clones and builds remote GitHub scenario repositories into `runtime/`.
@@ -53,9 +53,9 @@
 
 ## C. Work Remaining
 
-1. Integration of live multimodal LLM vision APIs into `image_branch.py`.
-2. Full Whisper / STT integration for `voice_branch.py`.
-3. Standalone Docker containerization for production deployment.
+1. **Live Multimodal Vision Integration**: Full integration of live multimodal LLM vision APIs (OpenAI Vision / Gemini 1.5 Pro) into `backend/image_branch.py`.
+2. **Speech-to-Text Integration**: Full Whisper / STT pipeline integration for `backend/voice_branch.py`.
+3. **Containerization**: Production Docker containerization and Compose orchestration setup.
 
 ---
 
@@ -65,24 +65,24 @@
 
 1. **Real Browser End-to-End Test (`simulator/e2e_real_browser_test.py`)**:
    - **Command**: `python simulator/e2e_real_browser_test.py`
-   - **Status**: **PASSED** (Code 0)
-   - **Verified**: Real Playwright Chromium launch with extension, DOM state before/after capture (`checked=true` -> `checked=false`), behavioral diff calculation, 8-stage pipeline stage execution, and all 4 verdict states (`SUPPORTED`, `POTENTIAL`, `NO EVIDENCE`, `INCONCLUSIVE`).
+   - **Status**: **PASSED** (Exit code 0)
+   - **Verified**: Real Playwright Chromium launch with extension context, DOM state before/after capture (`checked=true` -> `checked=false`), behavioral diff calculation, 8-stage pipeline stage execution, and all 4 verdict states (`SUPPORTED`, `POTENTIAL`, `NO EVIDENCE`, `INCONCLUSIVE`).
 
 2. **External Negative Control Test (`simulator/blind_realworld_audit_external.py`)**:
    - **Command**: `python simulator/blind_realworld_audit_external.py`
    - **Target**: `https://httpbin.org/forms/post` (Public Live Website)
-   - **Status**: **PASSED** (Code 0)
+   - **Status**: **PASSED** (Exit code 0)
    - **Verdict**: `NO EVIDENCE` (0 false positives).
 
 3. **Public Internet Target Blind Test (`simulator/realworld_external_positive_search.py`)**:
    - **Command**: `python simulator/realworld_external_positive_search.py`
    - **Target**: `https://demo.playwright.dev/todomvc/` (Playwright TodoMVC Public Benchmark)
-   - **Status**: **PASSED** (Code 0)
+   - **Status**: **PASSED** (Exit code 0)
    - **Result**: Frozen before ground truth reveal to `results/blind_external_positive_20261002_155913.json`. Verdict: `NO EVIDENCE` (Clean baseline verified).
 
 ---
 
 ## E. Important Assumptions or Unknowns
 
-1. **External LLM Dependencies**: The core behavioral engine operates deterministically using DOM properties, state mutations, and text rules. External LLM services (Gemini/OpenAI) are optional and not required for core platform functionality.
+1. **External LLM Dependencies**: The core behavioral engine operates deterministically using DOM properties, state mutations, and text rules. External LLM services (Gemini/OpenAI) are optional fallbacks and not required for core platform functionality.
 2. **Browser Context**: Real browser testing requires Playwright Chromium and Windows/Linux graphical environment support or headless Xvfb configuration.

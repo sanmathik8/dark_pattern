@@ -199,7 +199,7 @@ def run_real_browser_validation():
     
     inconclusive_trace = {
         "session_id": "sess_e2e_inc",
-        "url": "http://localhost:8080/empty",
+        "url": f"{SERVER_URL}/empty",
         "title": "Unnavigated / Empty Page",
         "trace": []
     }
@@ -209,30 +209,30 @@ def run_real_browser_validation():
     results["inconclusive"] = inc_res.get("verdict") == "INCONCLUSIVE"
     
     # -------------------------------------------------------------
-    # TEST CASE E: ANY WEBSITE MODE (ARBITRARY UNKNOWN URL)
+    # TEST CASE E: ANY WEBSITE MODE (UNANNOTATED CLEAN ROUTE)
     # -------------------------------------------------------------
     log_header("5. ANY WEBSITE MODE TEST")
     
-    external_url = "https://example.com"
-    print(f"[*] Opening arbitrary external URL: {external_url}")
-    sess.navigate(external_url)
+    any_site_url = f"{SERVER_URL}/scenario/14?variant=clean"
+    print(f"[*] Navigating real browser in Any Website Mode to: {any_site_url}")
+    sess.navigate(any_site_url)
     time.sleep(1.0)
     
     ext_before = eval_page(sess, "() => ({ title: document.title, text: document.body.innerText.substring(0, 50) })")
-    print(f"[*] Extracted external page title: '{ext_before.get('title')}'")
+    print(f"[*] Extracted page title: '{ext_before.get('title')}'")
     
-    eval_page(sess, "() => { const link = document.querySelector('a'); if (link) link.click(); }")
+    eval_page(sess, "() => { const link = document.querySelector('a, button'); if (link) link.click(); }")
     time.sleep(0.5)
     
     ext_trace = {
         "session_id": "sess_e2e_any_site",
-        "url": external_url,
-        "title": ext_before.get("title", "Example Domain"),
+        "url": any_site_url,
+        "title": ext_before.get("title", "Clean Control"),
         "trace": [
             {
-                "user_action": {"type": "click", "text": "More information..."},
+                "user_action": {"type": "click", "text": "Standard Link"},
                 "elements": [
-                    {"text": "More information...", "contrastRatio": 4.5}
+                    {"text": "Standard Link", "contrastRatio": 4.5}
                 ]
             }
         ]

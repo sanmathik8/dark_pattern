@@ -101,9 +101,11 @@ python simulator/e2e_real_browser_test.py
 
 ---
 
-## Current Status
+## Current Status & Limitations
 - **Implemented**: Chrome Extension DOM Sensor, 8-stage live pipeline graph, Port 8080 Observatory Server, thread-safe Playwright Chromium context dispatcher, text classification branch, evidence fusion engine, CCPA legal mapping, and automated E2E test scripts.
-- **Partially Implemented**: Image and voice processing branches (structural stubs exist; external multimodal LLM vision calls fallback to DOM/text analysis when API keys are absent).
+- **Incomplete / Stubbed Limitations**:
+  - Image Vision Branch (`backend/image_branch.py`): External vision LLM API calls are stubbed placeholders; visual element detection currently fallbacks to DOM/text analysis.
+  - Voice Audio Branch (`backend/voice_branch.py`): Speech-to-text transcription is stubbed with mock signal placeholders.
 - **Under Development**: Production Docker containerization and live vision API integrations.
 
 ---
@@ -114,7 +116,8 @@ python simulator/e2e_real_browser_test.py
 
 ---
 
-## Future Work
-- Live multimodal LLM vision API integration for screenshot visual element analysis.
-- Whisper STT audio pipeline integration for voice pattern detection.
-- Expanded benchmark suite for mobile web view interfaces.
+## Future & Remaining Work
+1. Live multimodal LLM vision API integration for `backend/image_branch.py`.
+2. Whisper STT audio pipeline integration for `backend/voice_branch.py`.
+3. Standalone Docker containerization for production deployment.
+4. Expanded benchmark suite for mobile web view interfaces.
