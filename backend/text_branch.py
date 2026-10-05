@@ -100,15 +100,19 @@ def analyze_text_and_dom(
         is_checked = el.get("checked", False)
         tag = (el.get("tag") or "").lower()
         role = (el.get("role") or "").lower()
-        is_option_input = tag in ["input", "option"] or role in ["checkbox", "radio", "option"]
+        input_type = (el.get("type") or "").lower()
+        is_checkbox = (tag == "input" and input_type in ["checkbox", "radio"]) or role in ["checkbox", "radio"]
 
-        if is_checked and is_option_input:
-            heuristic_matches.append({
-                "category": "pre_selected_options",
-                "confidence": 0.88,
-                "evidence": text or "Pre-selected option input",
-                "reason": "Option or add-on item is pre-selected / checked by default."
-            })
+        preselect_keywords = ["warranty", "protection", "insurance", "express", "add-on", "addon", "tip", "fee", "tracking", "share", "location", "newsletter", "pre-selected", "preselected", "default", "optional"]
+
+        if is_checked and is_checkbox:
+            if any(k in text.lower() for k in preselect_keywords) or any(re.search(p, text) for p in PRESELECTED_PATTERNS):
+                heuristic_matches.append({
+                    "category": "pre_selected_options",
+                    "confidence": 0.88,
+                    "evidence": text or "Pre-selected option input",
+                    "reason": "Option or add-on item is pre-selected / checked by default."
+                })
 
         for p in PRESELECTED_PATTERNS:
             if re.search(p, text):
@@ -119,16 +123,18 @@ def analyze_text_and_dom(
                     "reason": "Language indicates pre-selected optional charge or subscription."
                 })
 
-        # 2. Visual Asymmetry (DOM styling check)
+        # 2. Visual Asymmetry (DOM styling check for deemphasized decline / opt-out elements)
+        decline_keywords = ["decline", "reject", "no thanks", "no, thanks", "skip", "opt-out", "don't want", "prefer paying", "prefer overpaying", "cancel subscription"]
         contrast = el.get("contrastRatio")
         font_size = el.get("fontSize", 14)
         if contrast is not None and contrast < 2.5 and (tag in ["button", "a"] or role == "button"):
-            heuristic_matches.append({
-                "category": "visual_asymmetry",
-                "confidence": 0.82,
-                "evidence": f"Contrast ratio: {contrast}:1, font-size: {font_size}px",
-                "reason": "Action element has dangerously low contrast or muted visual presence compared to surrounding UI."
-            })
+            if any(dk in text.lower() for dk in decline_keywords):
+                heuristic_matches.append({
+                    "category": "visual_asymmetry",
+                    "confidence": 0.82,
+                    "evidence": f"Decline element ('{text}'): Contrast ratio: {contrast}:1, font-size: {font_size}px",
+                    "reason": "Decline or opt-out action element has dangerously low contrast or muted visual presence compared to surrounding UI."
+                })
 
         # 3. Confirmshaming
         for p in CONFIRMSHAMING_PATTERNS:
@@ -186,7 +192,9 @@ def analyze_text_and_dom(
                 evidence_str = h_match["evidence"]
                 reason_str = h_match["reason"]
 
-            if final_conf >= threshold:
+            min_required_conf = threshold if h_match else max(threshold, 0.65)
+
+            if final_conf >= min_required_conf and final_conf > 0.55:
                 findings.append({
                     "category": cat,
                     "confidence": round(final_conf, 4),
@@ -242,7 +250,8 @@ def predict_multilabel_texts(texts: List[str], model_bundle: Dict[str, Any]) -> 
         X = vectorizer.transform(texts)
         if hasattr(classifier, "decision_function"):
             decisions = classifier.decision_function(X)
-            probs = 1.0 / (1.0 + np.exp(-decisions))
+            # Calibrate SVM sigmoid: positive decision values (>0) indicate dark pattern signal; decision <=0 represents neutral text (prob = 0.0)
+            probs = np.where(decisions > 0, 1.0 / (1.0 + np.exp(-decisions)), 0.0)
         else:
             probs = classifier.predict(X)
 

@@ -112,12 +112,24 @@
       </div>
     </div>
 
+    <!-- Element Inspector Result Card -->
+    <div id="inspectCard" class="session-card hidden" style="border: 1px solid #3b82f6; background: #0f172a; margin-bottom: 12px;">
+      <div class="session-header">
+        <span class="session-label" style="color:#60a5fa;">🎯 ELEMENT INSPECTION</span>
+        <span id="inspectVerdictBadge" class="badge" style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:bold;">CLEAN</span>
+      </div>
+      <div id="inspectElementText" style="font-size:12px;font-weight:600;color:#f8fafc;margin-top:6px;word-break:break-word;">Target: Element</div>
+      <div id="inspectCategory" style="font-size:11px;color:#cbd5e1;margin-top:4px;">Category: Clean Element (0%)</div>
+      <div id="inspectReason" style="font-size:10px;color:#94a3b8;margin-top:4px;">No deceptive pattern detected.</div>
+      <div id="inspectTip" style="font-size:10px;color:#38bdf8;margin-top:6px;background:#1e293b;padding:6px;border-radius:4px;">💡 Consumer Tip: Element conforms to transparent design guidelines.</div>
+    </div>
+
     <!-- Findings & Evidence Container -->
     <div id="findingsContainer" class="findings-container">
       <div class="empty-state">
         <div class="empty-icon">🔬</div>
         <p>No research session active.</p>
-        <p class="sub-text">Click <strong>START RESEARCH SESSION</strong>, browse normally, then stop to analyze traces.</p>
+        <p class="sub-text">Click <strong>START RESEARCH SESSION</strong>, browse normally, or use <strong>🎯 Inspect Element Mode</strong> to test any element.</p>
       </div>
     </div>
 
@@ -129,6 +141,7 @@
 
     <!-- Actions -->
     <div class="actions">
+      <button id="inspectToggleBtn" class="btn btn-secondary" style="background:#0f172a;border:1px solid #3b82f6;color:#60a5fa;">🎯 Inspect Element: OFF</button>
       <button id="scanBtn" class="btn btn-primary">🔍 Quick Scan Page</button>
       <button id="clearBtn" class="btn btn-secondary">✖ Clear Overlay</button>
     </div>

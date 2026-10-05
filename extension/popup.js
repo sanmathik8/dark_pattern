@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await updateUI();
 
   document.getElementById('sessionToggleBtn').addEventListener('click', toggleResearchSession);
+  document.getElementById('inspectToggleBtn').addEventListener('click', toggleInspectMode);
   document.getElementById('scanBtn').addEventListener('click', scanPage);
   document.getElementById('clearBtn').addEventListener('click', clearHighlights);
   document.getElementById('autoScan').addEventListener('change', toggleAutoScan);
@@ -16,6 +17,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     chrome.runtime.onMessage.addListener((request) => {
       if (request.action === 'scanComplete' || request.action === 'traceUpdated') {
         updateUI();
+      } else if (request.action === 'elementInspected') {
+        renderInspectResult(request.data);
       }
     });
   }
@@ -369,4 +372,70 @@ function escapeHtml(str) {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
+}
+
+async function toggleInspectMode() {
+  chrome.storage.local.get(['isInspectMode'], async (res) => {
+    const nextState = !(res.isInspectMode === true);
+    await chrome.storage.local.set({ isInspectMode: nextState });
+
+    const btn = document.getElementById('inspectToggleBtn');
+    if (btn) {
+      if (nextState) {
+        btn.textContent = '🎯 Inspect Element: ON';
+        btn.style.background = '#2563eb';
+        btn.style.color = '#ffffff';
+        btn.style.borderColor = '#60a5fa';
+      } else {
+        btn.textContent = '🎯 Inspect Element: OFF';
+        btn.style.background = '#0f172a';
+        btn.style.color = '#60a5fa';
+        btn.style.borderColor = '#3b82f6';
+      }
+    }
+
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (tab && tab.id) {
+      chrome.tabs.sendMessage(tab.id, { action: 'toggleInspectMode', enabled: nextState }).catch(() => {});
+    }
+  });
+}
+
+function renderInspectResult(data) {
+  const card = document.getElementById('inspectCard');
+  if (!card) return;
+
+  card.classList.remove('hidden');
+
+  const badge = document.getElementById('inspectVerdictBadge');
+  const txt = document.getElementById('inspectElementText');
+  const cat = document.getElementById('inspectCategory');
+  const reason = document.getElementById('inspectReason');
+  const tip = document.getElementById('inspectTip');
+
+  const isDark = data.is_dark_pattern === true || data.verdict === 'DARK_PATTERN';
+  const conf = Math.round((data.confidence || 0) * 100);
+
+  if (badge) {
+    badge.textContent = isDark ? `⚠️ DARK PATTERN (${conf}%)` : `✅ CLEAN ELEMENT`;
+    badge.style.background = isDark ? '#ef4444' : '#22c55e';
+  }
+
+  if (txt) {
+    const rawText = data.evidence ? (Array.isArray(data.evidence) ? data.evidence[0] : data.evidence) : 'Target Element';
+    txt.textContent = `Target: "${String(rawText).substring(0, 80)}"`;
+  }
+
+  if (cat) {
+    cat.textContent = `Category: ${data.category || (isDark ? 'Deceptive Pattern' : 'Clean UI')}`;
+  }
+
+  if (reason) {
+    reason.textContent = data.reason || (isDark ? 'Deceptive design pattern detected.' : 'Element is clean and transparent.');
+  }
+
+  if (tip) {
+    const legal = data.legal_info || {};
+    tip.innerHTML = `💡 <strong>Tip:</strong> ${legal.consumer_tip || (isDark ? 'Verify terms carefully.' : 'Element conforms to transparent UI guidelines.')}`;
+  }
 }

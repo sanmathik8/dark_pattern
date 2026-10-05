@@ -52,6 +52,22 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       sendResponse({ success: true });
       break;
 
+    case 'inspectElement':
+      (async () => {
+        try {
+          const resp = await fetch(`${API_BASE_URL}/api/inspect_element`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ element: request.element, threshold: 0.65 })
+          });
+          const inspectRes = await resp.json();
+          sendResponse({ success: true, result: inspectRes });
+        } catch (err) {
+          sendResponse({ success: false, error: err.message });
+        }
+      })();
+      return true;
+
     default:
       break;
   }
@@ -96,7 +112,7 @@ async function analyzePage(tabId, tab) {
       state_before: pageData.state_before || null,
       state_after: pageData.state_after || null,
       url: tab.url,
-      threshold: 0.50
+      threshold: 0.65
     };
 
     const response = await fetch(`${API_BASE_URL}${DETECT_ENDPOINT}`, {

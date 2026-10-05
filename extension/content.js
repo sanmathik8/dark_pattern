@@ -195,9 +195,116 @@ if (typeof window.DarkPatternDetectorInjected === 'undefined') {
   // Record initial page observation if recording session is active
   appendTraceSnapshot({ type: 'page_load', text: 'Page Loaded / Navigated', timestamp: new Date().toISOString() });
 
+  // ── Element Inspector Mode ──────────────────────────────────────────────────
+  let isInspectMode = false;
+  let currentInspectHoverEl = null;
+
+  function setInspectBanner(active) {
+    let banner = document.getElementById('dp-inspect-banner');
+    if (active) {
+      if (!banner) {
+        banner = document.createElement('div');
+        banner.id = 'dp-inspect-banner';
+        banner.style.cssText = `
+          position: fixed !important;
+          top: 12px !important;
+          left: 50% !important;
+          transform: translateX(-50%) !important;
+          background: #2563eb !important;
+          color: #ffffff !important;
+          padding: 8px 18px !important;
+          border-radius: 9999px !important;
+          font-size: 12px !important;
+          font-weight: 700 !important;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.5) !important;
+          z-index: 2147483647 !important;
+          pointer-events: none !important;
+          letter-spacing: 0.02em !important;
+        `;
+        banner.textContent = '🎯 ELEMENT INSPECTION MODE: Click ANY element on page to check if it\'s clean or a dark pattern';
+        (document.body || document.documentElement).appendChild(banner);
+      }
+    } else {
+      if (banner) banner.remove();
+      if (currentInspectHoverEl) {
+        currentInspectHoverEl.style.outline = '';
+        currentInspectHoverEl = null;
+      }
+    }
+  }
+
+  document.addEventListener('mouseover', (e) => {
+    if (!isInspectMode) return;
+    if (currentInspectHoverEl && currentInspectHoverEl !== e.target) {
+      currentInspectHoverEl.style.outline = '';
+    }
+    currentInspectHoverEl = e.target;
+    if (currentInspectHoverEl && currentInspectHoverEl.id !== 'dp-inspect-banner') {
+      currentInspectHoverEl.style.outline = '2px dashed #3b82f6';
+    }
+  }, { capture: true, passive: true });
+
+  document.addEventListener('mouseout', (e) => {
+    if (!isInspectMode) return;
+    if (e.target && e.target === currentInspectHoverEl) {
+      e.target.style.outline = '';
+      currentInspectHoverEl = null;
+    }
+  }, { capture: true, passive: true });
+
   // ── Stateful Interaction Action Tracker ─────────────────────────────────────
   // Privacy P0 Enforced: Tracks clicked element metadata (ID, Tag, Safe Text), NEVER typed input values!
   document.addEventListener('click', (event) => {
+    if (isInspectMode) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const el = event.target;
+      if (el) el.style.outline = '';
+
+      const style = window.getComputedStyle(el);
+      const rect = el.getBoundingClientRect();
+      const fgRgb = parseRgb(style.color) || [0,0,0];
+      const bgRgb = getResolvedBackgroundColor(el);
+      const contrast = calculateContrastRatio(fgRgb, bgRgb);
+      const tag = el.tagName.toLowerCase();
+
+      let safeText = "";
+      const isEditable = el.isContentEditable || tag === 'textarea' || (tag === 'input' && !['button', 'submit', 'checkbox', 'radio', 'image'].includes(el.type));
+      if (isEditable) {
+        safeText = el.getAttribute('placeholder') || el.getAttribute('aria-label') || "";
+      } else {
+        safeText = el.innerText || el.textContent || el.value || "";
+      }
+      safeText = safeText.replace(/\s+/g, ' ').trim().substring(0, 300);
+
+      const inspectItem = {
+        id: el.id || `dp_inspect_${Date.now()}`,
+        tag: tag,
+        role: el.getAttribute('role') || "",
+        text: safeText,
+        ariaLabel: el.getAttribute('aria-label') || null,
+        placeholder: el.getAttribute('placeholder') || null,
+        fontSize: parseFloat(style.fontSize) || 14,
+        color: style.color,
+        contrastRatio: contrast,
+        checked: el.checked || el.getAttribute('aria-checked') === 'true',
+        rect: { x: Math.round(rect.x), y: Math.round(rect.y), width: Math.round(rect.width), height: Math.round(rect.height) }
+      };
+
+      chrome.runtime.sendMessage({ action: 'inspectElement', element: inspectItem }, (res) => {
+        if (res && res.success && res.result) {
+          const resultData = res.result;
+          renderSingleInspectHighlight(el, resultData);
+          if (chrome.runtime && chrome.runtime.sendMessage) {
+            chrome.runtime.sendMessage({ action: 'elementInspected', data: resultData }).catch(() => {});
+          }
+        }
+      });
+      return false;
+    }
+
     let target = event.target;
     while (target && target !== document.body) {
       const tag = target.tagName ? target.tagName.toLowerCase() : "";
@@ -222,7 +329,7 @@ if (typeof window.DarkPatternDetectorInjected === 'undefined') {
       }
       target = target.parentElement;
     }
-  }, { capture: true, passive: true });
+  }, { capture: true, passive: false });
 
   // ── Overlay Rendering ───────────────────────────────────────────────────────
   let activeHighlights = [];
@@ -396,10 +503,66 @@ if (typeof window.DarkPatternDetectorInjected === 'undefined') {
           sendResponse({ success: true });
           break;
 
+        case 'toggleInspectMode':
+          isInspectMode = request.enabled === true;
+          setInspectBanner(isInspectMode);
+          sendResponse({ success: true, isInspectMode: isInspectMode });
+          break;
+
         default:
           sendResponse({ success: false, error: 'Unknown action' });
       }
       return true;
     });
+  }
+
+  function renderSingleInspectHighlight(targetEl, resultData) {
+    const root = getOrCreateOverlayRoot();
+    const rect = targetEl.getBoundingClientRect();
+    if (!rect) return;
+
+    const isDark = resultData.is_dark_pattern === true || resultData.verdict === 'DARK_PATTERN';
+    const confidence = Math.round((resultData.confidence || 0) * 100);
+    const category = resultData.category || (isDark ? "Dark Pattern" : "Clean Element");
+    const color = isDark ? "#ef4444" : "#22c55e";
+
+    const highlightBox = document.createElement('div');
+    highlightBox.className = 'dp-overlay-highlight';
+    highlightBox.style.cssText = `
+      position: absolute !important;
+      top: ${rect.top + window.scrollY}px !important;
+      left: ${rect.left + window.scrollX}px !important;
+      width: ${rect.width}px !important;
+      height: ${rect.height}px !important;
+      border: 2px solid ${color} !important;
+      box-shadow: 0 0 10px ${color}80 !important;
+      border-radius: 4px !important;
+      pointer-events: none !important;
+      z-index: 2147483647 !important;
+      transition: all 0.2s ease !important;
+    `;
+
+    const badge = document.createElement('div');
+    badge.className = 'dp-overlay-badge';
+    badge.textContent = isDark ? `⚠️ ${category} · ${confidence}%` : `✅ CLEAN ELEMENT · 0% Dark Pattern`;
+    badge.style.cssText = `
+      position: absolute !important;
+      top: -26px !important;
+      left: 0 !important;
+      background: ${color} !important;
+      color: #ffffff !important;
+      padding: 4px 10px !important;
+      border-radius: 4px !important;
+      font-size: 11px !important;
+      font-weight: 700 !important;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4) !important;
+      white-space: nowrap !important;
+      pointer-events: auto !important;
+      cursor: pointer !important;
+    `;
+
+    highlightBox.appendChild(badge);
+    root.appendChild(highlightBox);
   }
 }

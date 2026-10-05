@@ -146,7 +146,7 @@ class DetectRequest(BaseModel):
     state_before: Optional[Dict[str, Any]] = None
     state_after: Optional[Dict[str, Any]] = None
     url: Optional[str] = ""
-    threshold: Optional[float] = 0.50
+    threshold: Optional[float] = 0.65
 
 class FusedFindingItem(BaseModel):
     category: str
@@ -280,6 +280,50 @@ def detect(req: DetectRequest):
         model_type=model_bundle.get("type", "heuristic_fallback"),
         modalities_processed=modalities_processed
     )
+
+
+@app.post("/api/inspect_element")
+def inspect_element(req: Dict[str, Any]):
+    """
+    Real-time single element inspection API.
+    Analyzes a specific clicked element and returns clean vs dark pattern verdict.
+    """
+    element = req.get("element", {})
+    threshold = float(req.get("threshold", 0.65))
+    
+    if not element:
+        raise HTTPException(status_code=400, detail="No element data provided")
+        
+    findings = analyze_text_and_dom([element], model_bundle, threshold=threshold)
+    
+    if findings:
+        finding = findings[0]
+        enriched = enrich_finding_with_legal_compliance(finding)
+        return {
+            "is_dark_pattern": True,
+            "verdict": "DARK_PATTERN",
+            "category": enriched.get("category"),
+            "confidence": enriched.get("confidence"),
+            "evidence": enriched.get("evidence"),
+            "reason": enriched.get("reason"),
+            "legal_info": enriched.get("legal_info"),
+            "element_id": element.get("id")
+        }
+    else:
+        return {
+            "is_dark_pattern": False,
+            "verdict": "CLEAN",
+            "category": "Clean Element",
+            "confidence": 0.0,
+            "evidence": [element.get("text", "")],
+            "reason": "No deceptive pattern detected. Element is transparent and clean.",
+            "legal_info": {
+                "law_title": "Compliant Design",
+                "legal_citation": "CCPA / FTC Guidelines Compliant",
+                "consumer_tip": "Element conforms to transparent user interface design guidelines."
+            },
+            "element_id": element.get("id")
+        }
 
 
 @app.post("/report", response_class=HTMLResponse)
