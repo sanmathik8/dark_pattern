@@ -125,5 +125,12 @@
     "dark_patterns": [],
     "dark_html": "\n            <div>\n                <h2>Welcome to Clean Official Store</h2>\n                <p>Browse our catalog of verified products with transparent flat-rate shipping.</p>\n                <button style=\"background:#3b82f6;color:white;padding:10px 20px;\">Browse Catalog</button>\n            </div>\n        ",
     "clean_html": "\n            <div>\n                <h2>Welcome to Clean Official Store</h2>\n                <p>Browse our catalog of verified products with transparent flat-rate shipping.</p>\n                <button style=\"background:#3b82f6;color:white;padding:10px 20px;\">Browse Catalog</button>\n            </div>\n        "
-  }
-]
+  },
+  {
+    "id": 15,
+    "title": "Search Engine & Native Ad Trap",
+    "dark_patterns": [
+      "disguised_ads"
+    ],
+    "dark_html": "\n            <div>\n                <h2>Web Search Portal</h2>\n                <div style=\"border:2px solid #3b82f6;padding:10px;\">\n                    <p style=\"font-size:10px;color:#888;\">Recommended Result</p>\n                    <h3><a href=\"#\">Download Premium PDF Reader (Fast Free Installer)</a></h3>\n                    <p>Official high-speed PDF reader with bundled system optimizer and browser utilities.</p>\n                    <button style=\"background:#22c55e;color:white;padding:8px 16px;\">Download PDF Reader v4.2</button>\n                </div>\n            </div>\n        ",
+    "clean_html": "\n            <div>\n                <h2>Web Search Portal</h2>\n                <div style=\"background:#1e1b4b;border:1px dashed #818cf8;padding:10px;\">\n                    <span style=\"background:#4338ca;color:#c7d2fe;padding:2px 6px;font-size:10px;\">SPONSORED ADVERTISEMENT</span>\n                    <h3>Download PDF Converter (Third Party Ad)</h3>\n                    <p>Commercial third-party PDF converter tool. Ad provided by Partner Network.</p>\n                </div>\n            </div>\n        "\n  }\n]

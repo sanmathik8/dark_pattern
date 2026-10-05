@@ -134,6 +134,16 @@ class DifferentialComparator:
             diff["misdirection_diff"] = True
             diff["misdirection_details"].append("Primary CTA leads to partner toolbar or bait-and-switch price jump in DARK variant")
 
+        # 8. Disguised Ads & Native Advertising Delta (disguised_ads)
+        dark_disguised = any(
+            "recommended result" in t or "fast free installer" in t or "pdf reader" in t
+            for t in dark_texts
+        )
+        clean_disguised = any("sponsored advertisement" in t for t in clean_texts)
+
+        if dark_disguised and clean_disguised:
+            diff["disguised_ad_diff"] = True
+
         # Raw Text Delta
         clean_text_set = set(clean_texts)
         dark_unique_texts = [t for t in dark_texts if t not in clean_text_set]

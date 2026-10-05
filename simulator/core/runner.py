@@ -52,6 +52,25 @@ class UniversalScenarioRunner:
         self.comparator = DifferentialComparator()
         self.evaluator = UniversalScenarioEvaluator()
 
+    def run_scenario_variant(self, scenario: ScenarioContract, variant: str = "dark") -> Dict[str, Any]:
+        """Runs a single variant of a scenario contract and returns the observed state & ground truth."""
+        cfg = scenario.ground_truth if isinstance(scenario.ground_truth, dict) else {}
+        env = self.environment_mgr.prepare_environment(cfg, variant=variant)
+        sess = BrowserSession(extension_path=self.extension_path, headless=True)
+        observation = {}
+        if sess.create():
+            if sess.navigate(env.get("health_url", f"http://localhost:8080/scenario/{scenario.id:02d}?variant={variant}")):
+                observation = sess.get_page_state()
+            sess.close()
+        return {
+            "scenario_id": scenario.id,
+            "scenario_name": scenario.name,
+            "variant": variant,
+            "ground_truth": cfg,
+            "observation": observation,
+            "url": env.get("health_url", f"http://localhost:8080/scenario/{scenario.id:02d}?variant={variant}")
+        }
+
     def run_scenario_experiment(self, scenario_config: Dict[str, Any]) -> Dict[str, Any]:
         """
         Executes complete Clean vs. Dark behavioral experiment:

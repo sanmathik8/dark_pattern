@@ -15,7 +15,8 @@ ALL_CATEGORIES = [
     "forced_continuity",
     "confirmshaming",
     "visual_asymmetry",
-    "misdirection"
+    "misdirection",
+    "disguised_ads"
 ]
 
 class UniversalScenarioEvaluator:
@@ -126,6 +127,12 @@ class UniversalScenarioEvaluator:
                 exp = f"Primary CTA misleads user to third-party toolbar or price increases upon adding to cart in DARK variant."
                 return True, "STRONG", exp
             return False, "NOT_SUPPORTED", "No CTA misdirection difference."
+
+        elif category == "disguised_ads":
+            if diff.get("disguised_ad_diff") or diff.get("sponsored_ad_diff"):
+                exp = f"Sponsored third-party ad visually styled identically to organic search result without prominent label present in DARK variant."
+                return True, "STRONG", exp
+            return False, "NOT_SUPPORTED", "No disguised advertisement difference."
 
         return False, "NOT_SUPPORTED", "Category not recognized."
 

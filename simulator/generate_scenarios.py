@@ -262,6 +262,23 @@ SCENARIO_CONFIGS = [
         "commit_hash": "e12a4b8905391d1e6702c2f109289871bb219802",
         "entrypoint": "index.html",
         "description": "Fully transparent, clean control store without any deceptive UI patterns (used for false-positive validation)."
+    },
+    {
+        "id": 15,
+        "slug": "scenario_15",
+        "title": "Search Engine & Native Ad Trap",
+        "category": "Disguised Advertising",
+        "dark_patterns": ["disguised_ads"],
+        "predicates": {
+            "disguised_ads": {
+                "positive_predicates": ["sponsored_ad_mimicking_organic_result", "deceptive_ad_labeling"],
+                "negative_predicates": ["clearly_labeled_ad_in_clean"]
+            }
+        },
+        "github_repo": "https://github.com/angular/angular.git",
+        "commit_hash": "e12a4b8905391d1e6702c2f109289871bb219802",
+        "entrypoint": "index.html",
+        "description": "Search result page with a sponsored third-party ad visually styled identically to top organic result without prominent ad labels."
     }
 ]
 
@@ -831,6 +848,41 @@ def build_dynamic_app_code(sc):
         </div>
         """ + base_footer
 
+    # Scenario 15: Search Engine & Native Ad Trap (disguised_ads)
+    elif sc_id == 15:
+        dark_body = base_head + """
+        <div class="header">
+            <h2>Web Search Portal</h2>
+            <span class="badge badge-dark">DARK VARIANT</span>
+        </div>
+        <div class="card" style="border: 2px solid #3b82f6;">
+            <p style="font-size:10px;color:#64748b;margin:0;">Recommended Result</p>
+            <h3 style="color:#60a5fa;margin-top:4px;"><a href="#" style="color:#60a5fa;text-decoration:none;">Download Premium PDF Reader (Fast Free Installer)</a></h3>
+            <p style="font-size:13px;color:#cbd5e1;">Official high-speed PDF reader with bundled system optimizer and browser utilities.</p>
+            <button class="btn btn-success">Download PDF Reader v4.2</button>
+        </div>
+        <div class="card">
+            <h3 style="color:#60a5fa;"><a href="#" style="color:#60a5fa;text-decoration:none;">Apache OpenOffice Open Source Suite</a></h3>
+            <p style="font-size:13px;color:#cbd5e1;">Official open source office software suite for word processing and spreadsheets.</p>
+        </div>
+        """ + base_footer
+
+        clean_body = base_head + """
+        <div class="header">
+            <h2>Web Search Portal</h2>
+            <span class="badge badge-clean">CLEAN VARIANT</span>
+        </div>
+        <div class="card" style="background:#1e1b4b;border:1px dashed #818cf8;">
+            <span class="badge" style="background:#4338ca;color:#c7d2fe;display:inline-block;margin-bottom:6px;">SPONSORED ADVERTISEMENT</span>
+            <h3 style="color:#a5b4fc;margin-top:4px;">Download PDF Converter (Third Party Ad)</h3>
+            <p style="font-size:13px;color:#cbd5e1;">Commercial third-party PDF converter tool. Ad provided by Partner Network.</p>
+        </div>
+        <div class="card">
+            <h3 style="color:#60a5fa;"><a href="#" style="color:#60a5fa;text-decoration:none;">Apache OpenOffice Open Source Suite</a></h3>
+            <p style="font-size:13px;color:#cbd5e1;">Official open source office software suite for word processing and spreadsheets.</p>
+        </div>
+        """ + base_footer
+
     # Scenario 14: Clean Control Baseline (Control Baseline)
     else:
         dark_body = base_head + """
@@ -886,7 +938,7 @@ def main():
         json.dump(master_manifest, f, indent=2)
         
     print(f"\n[OK] Master research manifest generated at {MANIFEST_PATH}")
-    print("[SUCCESS] All 14 scenario web applications are ready to run!")
+    print("[SUCCESS] All 15 scenario web applications are ready to run!")
 
 if __name__ == "__main__":
     main()

@@ -1,5 +1,5 @@
 {
-  "version": "2.2.0",
+  "version": "2.1.0",
   "taxonomy": "India CCPA 13 Dark Pattern Guidelines",
   "scenarios_count": 15,
   "server_base_url": "http://localhost:8080",
@@ -9,22 +9,8 @@
       "slug": "scenario_01",
       "title": "Flash-Sale Store",
       "category": "E-Commerce",
-      "experiment_type": "urgency_disclosure",
-      "visual_theme": "commerce",
-      "github_repo": "https://github.com/gothinkster/realworld.git",
-      "commit_hash": "a5d89f13e734c3111f181640a33116bcbf29d2bf",
       "dark_patterns": [
         "scarcity_urgency"
-      ],
-      "research": {
-        "question": "Does the application employ artificial time pressure or resetting countdown timers to manipulate user purchase decisions?",
-        "observable_dimensions": ["DOM Mutations", "JavaScript Timers", "Visual Asymmetry"],
-        "journey": ["Browse Product Catalog", "View Flash Sale Banner", "Observe Timer Behavior", "Complete Checkout"]
-      },
-      "interaction_controls": [
-        { "label": "Observe Flash Banner", "action": "scroll", "selector": ".flash-banner" },
-        { "label": "Inspect Timer State", "action": "hover", "selector": "#timer" },
-        { "label": "Proceed to Checkout", "action": "click", "selector": "button.buy-now" }
       ],
       "predicates": {
         "scarcity_urgency": {
@@ -39,29 +25,21 @@
           ]
         }
       },
-      "evidence_summary": "Live countdown timer present in DARK variant ('HURRY! Flash Sale ends in...') and absent in CLEAN variant."
+      "github_repo": "https://github.com/gothinkster/realworld.git",
+      "commit_hash": "a5d89f13e734c3111f181640a33116bcbf29d2bf",
+      "variant_urls": {
+        "dark": "http://localhost:8080/scenario/01?variant=dark",
+        "clean": "http://localhost:8080/scenario/01?variant=clean"
+      },
+      "description": "Product store featuring a live JavaScript countdown timer that decrements and resets on reload."
     },
     {
       "id": 2,
       "slug": "scenario_02",
       "title": "Multi-Step Checkout with Late Fees",
       "category": "Checkout",
-      "experiment_type": "pricing_disclosure",
-      "visual_theme": "commerce",
-      "github_repo": "https://github.com/snipcart/snipcart-html-demo.git",
-      "commit_hash": "c47bf1b2a95c479e0f6e1088a2ef8673f82161f3",
       "dark_patterns": [
         "hidden_delayed_costs"
-      ],
-      "research": {
-        "question": "Are mandatory service fees disclosed upfront during initial price display or concealed until final payment step?",
-        "observable_dimensions": ["DOM Pricing Nodes", "State Transitions", "Network Telemetry"],
-        "journey": ["Open Checkout", "Review Itemized Subtotal", "Proceed to Payment Step", "Verify Fee Disclosures"]
-      },
-      "interaction_controls": [
-        { "label": "Review Order Subtotal", "action": "scroll", "selector": ".cart-subtotal" },
-        { "label": "Proceed to Step 2", "action": "click", "selector": "button.next-step" },
-        { "label": "Verify Final Total", "action": "click", "selector": "#pay-button" }
       ],
       "predicates": {
         "hidden_delayed_costs": {
@@ -74,452 +52,374 @@
           ]
         }
       },
-      "evidence_summary": "Mandatory unrequested service fee ($12.00) introduced late in DARK variant checkout and absent in CLEAN variant."
+      "github_repo": "https://github.com/snipcart/snipcart-html-demo.git",
+      "commit_hash": "c47bf1b2a95c479e0f6e1088a2ef8673f82161f3",
+      "variant_urls": {
+        "dark": "http://localhost:8080/scenario/02?variant=dark",
+        "clean": "http://localhost:8080/scenario/02?variant=clean"
+      },
+      "description": "Multi-step checkout (Cart -> Shipping -> Payment) introducing an unrequested $12 service fee late in the flow."
     },
     {
       "id": 3,
       "slug": "scenario_03",
       "title": "Cart with Pre-Added Extras",
       "category": "Shopping Cart",
-      "experiment_type": "form_preselection",
-      "visual_theme": "commerce",
-      "github_repo": "https://github.com/reactjs/redux.git",
-      "commit_hash": "b26d8338e55c68f128d8b9d8858f9188e7b99a12",
       "dark_patterns": [
         "pre_selected_options"
-      ],
-      "research": {
-        "question": "Are optional product protection plans or express handling fees pre-checked by default without explicit user consent?",
-        "observable_dimensions": ["Checkbox State", "DOM Inputs", "Cart Total Calculation"],
-        "journey": ["Add Item to Cart", "View Cart Summary", "Check Pre-Selected Add-ons", "Proceed to Checkout"]
-      },
-      "interaction_controls": [
-        { "label": "Inspect Pre-Checked Add-ons", "action": "scroll", "selector": ".addons-list" },
-        { "label": "Toggle Protection Plan", "action": "click", "selector": "input#protection-checkbox" },
-        { "label": "Continue to Payment", "action": "click", "selector": "button.checkout" }
       ],
       "predicates": {
         "pre_selected_options": {
           "positive_predicates": [
-            "prechecked_addon_checkbox",
-            "unrequested_item_in_cart"
+            "preselected_addon_checkbox",
+            "optional_item_prechecked"
           ],
           "negative_predicates": [
-            "unchecked_addons_in_clean"
+            "clean_unchecked_addons"
           ]
         }
       },
-      "evidence_summary": "Optional add-on protection plan ($19.99) & express handling ($4.99) pre-checked by default in DARK variant; unchecked in CLEAN variant."
+      "github_repo": "https://github.com/reactjs/redux.git",
+      "commit_hash": "b26d8338e55c68f128d8b9d8858f9188e7b99a12",
+      "variant_urls": {
+        "dark": "http://localhost:8080/scenario/03?variant=dark",
+        "clean": "http://localhost:8080/scenario/03?variant=clean"
+      },
+      "description": "Interactive cart application with pre-checked $19.99 extended warranty and express processing checkboxes."
     },
     {
       "id": 4,
       "slug": "scenario_04",
       "title": "Streaming Subscription Free Trial",
       "category": "Subscription",
-      "experiment_type": "forced_continuity",
-      "visual_theme": "subscription",
-      "github_repo": "https://github.com/stripe-samples/checkout-single-subscription.git",
-      "commit_hash": "d1e7c53641f238ab90d3a958b1220a1122ab45e3",
       "dark_patterns": [
         "forced_continuity"
-      ],
-      "research": {
-        "question": "Does the free trial onboarding flow conceal mandatory auto-renewal terms in fine print while imposing offline cancellation barriers?",
-        "observable_dimensions": ["Terms Fine-Print", "DOM Visibility", "Auto-Renew Clause"],
-        "journey": ["Select Free Trial Plan", "Enter Billing Details", "Review Renewal Terms", "Submit Registration"]
-      },
-      "interaction_controls": [
-        { "label": "Inspect Fine Print Terms", "action": "scroll", "selector": ".terms-section" },
-        { "label": "Check Auto-Renewal Note", "action": "hover", "selector": ".terms-note" },
-        { "label": "Submit Free Trial", "action": "click", "selector": "button.start-trial" }
       ],
       "predicates": {
         "forced_continuity": {
           "positive_predicates": [
-            "concealed_autorenewal_terms",
-            "offline_cancellation_requirement"
+            "hidden_auto_renewal",
+            "cancellation_barrier_fine_print"
           ],
           "negative_predicates": [
-            "transparent_online_cancellation_in_clean"
+            "transparent_cancellation_in_clean"
           ]
         }
       },
-      "evidence_summary": "Fine-print auto-renewal term ($29.99/mo) and mail/phone cancellation barrier present in DARK variant; transparent 1-click online cancel in CLEAN variant."
+      "github_repo": "https://github.com/stripe-samples/checkout-single-subscription.git",
+      "commit_hash": "d1e7c53641f238ab90d3a958b1220a1122ab45e3",
+      "variant_urls": {
+        "dark": "http://localhost:8080/scenario/04?variant=dark",
+        "clean": "http://localhost:8080/scenario/04?variant=clean"
+      },
+      "description": "SaaS streaming subscription trial with hidden fine-print auto-renewal and phone-only cancellation notice."
     },
     {
       "id": 5,
       "slug": "scenario_05",
       "title": "Multi-Step Cancellation Flow",
       "category": "Cancellation",
-      "experiment_type": "cancellation_barrier",
-      "visual_theme": "subscription",
-      "github_repo": "https://github.com/expressjs/express.git",
-      "commit_hash": "7b0d2d34a98f12ef02f1a92e10a887b1c1e9021a",
       "dark_patterns": [
         "forced_continuity",
         "confirmshaming"
       ],
-      "research": {
-        "question": "Does the cancellation flow require navigating retention obstacles and manipulative guilt-inducing opt-out dialogue?",
-        "observable_dimensions": ["Navigation Depth", "Confirmshaming Text", "CTA Contrast"],
-        "journey": ["Account Settings", "Initiate Cancellation", "Navigate Obstacle Steps", "Confirm Termination"]
-      },
-      "interaction_controls": [
-        { "label": "Start Cancellation", "action": "click", "selector": "a.cancel-sub" },
-        { "label": "Decline Retention Offer", "action": "click", "selector": "button.decline-offer" },
-        { "label": "Confirm Termination", "action": "click", "selector": "button.confirm-cancel" }
-      ],
       "predicates": {
         "forced_continuity": {
           "positive_predicates": [
-            "multi_step_cancellation_wizard",
-            "guilt_inducing_retention_dialogue"
+            "multi_step_cancellation_barrier"
           ],
           "negative_predicates": [
-            "direct_one_step_cancellation_in_clean"
+            "direct_cancellation_in_clean"
+          ]
+        },
+        "confirmshaming": {
+          "positive_predicates": [
+            "guilt_inducing_opt_out_text"
+          ],
+          "negative_predicates": [
+            "neutral_buttons_in_clean"
           ]
         }
       },
-      "evidence_summary": "Multi-step cancellation wizard + guilt-inducing opt-out phrase ('No thanks, I hate saving money') present in DARK variant."
+      "github_repo": "https://github.com/expressjs/express.git",
+      "commit_hash": "7b0d2d34a45c388277c0147986708b79d2b2a67e",
+      "variant_urls": {
+        "dark": "http://localhost:8080/scenario/05?variant=dark",
+        "clean": "http://localhost:8080/scenario/05?variant=clean"
+      },
+      "description": "4-step cancellation wizard featuring confirmation barriers and confirmshaming language ('No thanks, I hate saving money')."
     },
     {
       "id": 6,
       "slug": "scenario_06",
       "title": "Cookie Consent Banner",
       "category": "Privacy Consent",
-      "experiment_type": "consent_choice",
-      "visual_theme": "consent",
-      "github_repo": "https://github.com/jakearchibald/idb.git",
-      "commit_hash": "a4f891b2c5890e1234bc56789012defa34567890",
       "dark_patterns": [
         "visual_asymmetry"
-      ],
-      "research": {
-        "question": "Is the decline option de-emphasized via low contrast or miniature font size relative to the prominent 'ACCEPT ALL' CTA?",
-        "observable_dimensions": ["Visual Contrast Ratio", "Font Size Delta", "Button Prominence"],
-        "journey": ["Land on Page", "View Consent Modal", "Compare Accept vs Decline CTA", "Execute Choice"]
-      },
-      "interaction_controls": [
-        { "label": "Inspect Banner Asymmetry", "action": "scroll", "selector": ".cookie-banner" },
-        { "label": "Inspect Decline Contrast", "action": "hover", "selector": ".decline-link" },
-        { "label": "Reject Non-Essential", "action": "click", "selector": "a.decline-link" }
       ],
       "predicates": {
         "visual_asymmetry": {
           "positive_predicates": [
-            "deemphasized_decline_option",
-            "asymmetric_button_prominence"
+            "cta_contrast_asymmetry",
+            "deemphasized_decline_option"
           ],
           "negative_predicates": [
-            "equal_button_styling_in_clean"
+            "equal_button_symmetry_in_clean"
           ]
         }
       },
-      "evidence_summary": "Prominent bright green 'ACCEPT ALL' button vs low-contrast 9px gray decline link in DARK variant; equal button sizes in CLEAN variant."
+      "github_repo": "https://github.com/jakearchibald/idb.git",
+      "commit_hash": "a4f891b29d10e82c50a0f9b33a7e289192468ab0",
+      "variant_urls": {
+        "dark": "http://localhost:8080/scenario/06?variant=dark",
+        "clean": "http://localhost:8080/scenario/06?variant=clean"
+      },
+      "description": "Consent overlay with a prominent bright green 'ACCEPT ALL' button vs a low-contrast tiny decline link."
     },
     {
       "id": 7,
       "slug": "scenario_07",
       "title": "Travel Booking Engine",
       "category": "Booking",
-      "experiment_type": "pricing_and_urgency",
-      "visual_theme": "commerce",
-      "github_repo": "https://github.com/vuejs/vue.git",
-      "commit_hash": "8cf5522e1189d00b12bc34de5678901a12345678",
       "dark_patterns": [
         "scarcity_urgency",
         "hidden_delayed_costs"
       ],
-      "research": {
-        "question": "Does the booking interface trigger artificial viewer pressure popups and conceal mandatory resort fees until final checkout?",
-        "observable_dimensions": ["Artificial Social Proof", "Price Escalation", "DOM Popups"],
-        "journey": ["Search Hotel Rooms", "View Room Options", "Observe Viewer Pressure Popup", "Checkout with Fees"]
-      },
-      "interaction_controls": [
-        { "label": "Observe Pressure Popup", "action": "hover", "selector": ".viewer-count" },
-        { "label": "Select Room Option", "action": "click", "selector": "button.book-room" },
-        { "label": "Check Resort Fees", "action": "scroll", "selector": ".resort-fee" }
-      ],
       "predicates": {
         "scarcity_urgency": {
           "positive_predicates": [
-            "artificial_viewer_pressure",
-            "hidden_resort_fee"
+            "pressure_popup_present"
           ],
           "negative_predicates": [
-            "no_pressure_popup_in_clean"
+            "no_pressure_in_clean"
+          ]
+        },
+        "hidden_delayed_costs": {
+          "positive_predicates": [
+            "late_resort_fee_added"
+          ],
+          "negative_predicates": [
+            "upfront_resort_fee_in_clean"
           ]
         }
       },
-      "evidence_summary": "Artificial viewer pressure popup ('5 travelers viewing now') + late mandatory $35 resort fee in DARK variant."
+      "github_repo": "https://github.com/vuejs/vue.git",
+      "commit_hash": "8cf5522e8910b8bb0982367c3b28b7134371900a",
+      "variant_urls": {
+        "dark": "http://localhost:8080/scenario/07?variant=dark",
+        "clean": "http://localhost:8080/scenario/07?variant=clean"
+      },
+      "description": "Flight/hotel search engine displaying artificial viewer popups and late resort fees."
     },
     {
       "id": 8,
       "slug": "scenario_08",
       "title": "Food Delivery App",
       "category": "Food Delivery",
-      "experiment_type": "preselection_and_fee",
-      "visual_theme": "commerce",
-      "github_repo": "https://github.com/tailwindlabs/tailwindcss.git",
-      "commit_hash": "e12a4b8905391d1e6702c2f109289871bb219802",
       "dark_patterns": [
         "pre_selected_options",
         "hidden_delayed_costs"
       ],
-      "research": {
-        "question": "Does the checkout interface auto-select 20% driver tips and inject unrequested service fees into the order total?",
-        "observable_dimensions": ["Pre-Checked Tips", "Service Fee Nodes", "Cart Total"],
-        "journey": ["Build Food Order", "Open Order Summary", "Check Pre-Selected Driver Tip", "Submit Order"]
-      },
-      "interaction_controls": [
-        { "label": "Inspect Tip Selection", "action": "scroll", "selector": ".tip-options" },
-        { "label": "Modify Driver Tip", "action": "click", "selector": ".tip-20" },
-        { "label": "Place Order", "action": "click", "selector": "button.place-order" }
-      ],
       "predicates": {
         "pre_selected_options": {
           "positive_predicates": [
-            "prechecked_driver_tip",
-            "automated_service_fee"
+            "prechecked_driver_tip"
           ],
           "negative_predicates": [
-            "zero_default_tip_in_clean"
+            "unchecked_tip_in_clean"
+          ]
+        },
+        "hidden_delayed_costs": {
+          "positive_predicates": [
+            "hidden_service_fee"
+          ],
+          "negative_predicates": [
+            "upfront_summary_in_clean"
           ]
         }
       },
-      "evidence_summary": "Pre-checked 20% driver tip + automated $3.50 service fee in DARK variant; 0% default tip in CLEAN variant."
+      "github_repo": "https://github.com/tailwindlabs/tailwindcss.git",
+      "commit_hash": "e12a4b8905391d1e6702c2f109289871bb219802",
+      "variant_urls": {
+        "dark": "http://localhost:8080/scenario/08?variant=dark",
+        "clean": "http://localhost:8080/scenario/08?variant=clean"
+      },
+      "description": "Food order checkout with pre-checked 20% driver tips and automated service fee additions."
     },
     {
       "id": 9,
       "slug": "scenario_09",
       "title": "SaaS Pricing & Billing",
       "category": "SaaS Pricing",
-      "experiment_type": "pricing_disclosure",
-      "visual_theme": "subscription",
-      "github_repo": "https://github.com/vercel/next.js.git",
-      "commit_hash": "fa1298c47b590e0b3c61b12987349b10925c1920",
       "dark_patterns": [
         "forced_continuity"
-      ],
-      "research": {
-        "question": "Is annual upfront billing selected by default in the tier grid while monthly billing options are concealed?",
-        "observable_dimensions": ["Billing Switcher State", "Upfront Cost Calculation", "Subscription Terms"],
-        "journey": ["View Tier Grid", "Inspect Billing Toggle", "Check Selected Plan Term", "Checkout"]
-      },
-      "interaction_controls": [
-        { "label": "Inspect Billing Term", "action": "scroll", "selector": ".pricing-grid" },
-        { "label": "Toggle Billing Mode", "action": "click", "selector": "#billing-toggle" },
-        { "label": "Select Pro Plan", "action": "click", "selector": "button.select-pro" }
       ],
       "predicates": {
         "forced_continuity": {
           "positive_predicates": [
-            "annual_billing_preselected",
-            "concealed_monthly_option"
+            "preselected_annual_upfront_plan",
+            "hidden_auto_recurring_billing"
           ],
           "negative_predicates": [
-            "monthly_billing_default_in_clean"
+            "explicit_billing_toggle_in_clean"
           ]
         }
       },
-      "evidence_summary": "Annual upfront billing ($240/yr) pre-selected by default with auto-renewal term in DARK variant; monthly billing in CLEAN variant."
+      "github_repo": "https://github.com/vercel/next.js.git",
+      "commit_hash": "fa1298c47b590e0b3c61b12987349b10925c1920",
+      "variant_urls": {
+        "dark": "http://localhost:8080/scenario/09?variant=dark",
+        "clean": "http://localhost:8080/scenario/09?variant=clean"
+      },
+      "description": "SaaS tier grid where annual upfront billing is selected by default with hidden recurring terms."
     },
     {
       "id": 10,
       "slug": "scenario_10",
       "title": "Newsletter Modal Popup",
       "category": "Newsletter",
-      "experiment_type": "confirmshaming",
-      "visual_theme": "consent",
-      "github_repo": "https://github.com/jquery/jquery.git",
-      "commit_hash": "d1e7c53641f238ab90d3a958b1220a1122ab45e3",
       "dark_patterns": [
         "confirmshaming"
-      ],
-      "research": {
-        "question": "Does the promo popup opt-out button use emotional manipulation or shaming wording to deter user refusal?",
-        "observable_dimensions": ["Modal Text Sentiment", "Button Labeling", "DOM Event Handlers"],
-        "journey": ["Page Load", "Trigger Promo Modal", "Read Opt-Out Button Text", "Close Modal"]
-      },
-      "interaction_controls": [
-        { "label": "Inspect Opt-Out Text", "action": "hover", "selector": ".shaming-decline" },
-        { "label": "Decline Offer", "action": "click", "selector": ".shaming-decline" }
       ],
       "predicates": {
         "confirmshaming": {
           "positive_predicates": [
-            "manipulative_optout_wording",
-            "emotional_guilt_phrase"
+            "shaming_opt_out_text"
           ],
           "negative_predicates": [
-            "neutral_optout_label_in_clean"
+            "neutral_opt_out_in_clean"
           ]
         }
       },
-      "evidence_summary": "Manipulative opt-out button text ('No thanks, I prefer paying full price and missing out on savings') present in DARK variant."
+      "github_repo": "https://github.com/jquery/jquery.git",
+      "commit_hash": "d1e7c53641f238ab90d3a958b1220a1122ab45e3",
+      "variant_urls": {
+        "dark": "http://localhost:8080/scenario/10?variant=dark",
+        "clean": "http://localhost:8080/scenario/10?variant=clean"
+      },
+      "description": "Modal promo popup using manipulative confirmshaming text on the opt-out button."
     },
     {
       "id": 11,
       "slug": "scenario_11",
       "title": "Software Download Portal",
       "category": "Downloads",
-      "experiment_type": "misdirection",
-      "visual_theme": "navigation",
-      "github_repo": "https://github.com/lodash/lodash.git",
-      "commit_hash": "2f79053d2bc7c40562e8111e13e0c0d0c3ab4ef5",
       "dark_patterns": [
         "misdirection"
-      ],
-      "research": {
-        "question": "Does the primary download button trick users into installing sponsored partner software instead of the requested file?",
-        "observable_dimensions": ["CTA Destination URL", "DOM Element Size", "Link Text Deception"],
-        "journey": ["Download Landing Page", "Identify Primary CTA", "Locate Genuine File Link", "Download File"]
-      },
-      "interaction_controls": [
-        { "label": "Inspect Primary CTA", "action": "hover", "selector": "a.download-cta" },
-        { "label": "Locate Direct File Link", "action": "hover", "selector": "a.direct-link" },
-        { "label": "Execute Download", "action": "click", "selector": "a.direct-link" }
       ],
       "predicates": {
         "misdirection": {
           "positive_predicates": [
-            "sponsored_toolbar_cta",
-            "deceptive_primary_button"
+            "deceptive_primary_cta",
+            "hidden_actual_file_link"
           ],
           "negative_predicates": [
-            "direct_download_cta_in_clean"
+            "direct_file_download_in_clean"
           ]
         }
       },
-      "evidence_summary": "Primary green CTA button downloads bundled sponsored software toolbar while actual file link is tiny footer text in DARK variant."
+      "github_repo": "https://github.com/lodash/lodash.git",
+      "commit_hash": "2f79053d2bc7c40562e8111e13e0c0d0c3ab4ef5",
+      "variant_urls": {
+        "dark": "http://localhost:8080/scenario/11?variant=dark",
+        "clean": "http://localhost:8080/scenario/11?variant=clean"
+      },
+      "description": "Download page with prominent green CTA leading to partner apps while actual file link is a small text node."
     },
     {
       "id": 12,
       "slug": "scenario_12",
       "title": "Product Page (Bait & Switch)",
       "category": "E-Commerce",
-      "experiment_type": "price_misdirection",
-      "visual_theme": "commerce",
-      "github_repo": "https://github.com/facebook/react.git",
-      "commit_hash": "b26d8338e55c68f128d8b9d8858f9188e7b99a12",
       "dark_patterns": [
         "misdirection"
-      ],
-      "research": {
-        "question": "Does the advertised product price increase automatically after the user adds the item to their shopping cart?",
-        "observable_dimensions": ["Product Price Node", "Cart Item Subtotal", "DOM Price Delta"],
-        "journey": ["View Advertised Item Price", "Add Item to Cart", "Observe Checkout Price Jump", "Verify Delta"]
-      },
-      "interaction_controls": [
-        { "label": "Inspect Advertised Price", "action": "scroll", "selector": ".product-price" },
-        { "label": "Add Item to Cart", "action": "click", "selector": "button.add-to-cart" },
-        { "label": "Check Cart Price Jump", "action": "scroll", "selector": ".cart-total" }
       ],
       "predicates": {
         "misdirection": {
           "positive_predicates": [
-            "bait_and_switch_price_jump",
-            "unannounced_item_price_increase"
+            "advertised_vs_checkout_price_mismatch",
+            "unexplained_price_jump"
           ],
           "negative_predicates": [
-            "stable_advertised_price_in_clean"
+            "stable_price_in_clean"
           ]
         }
       },
-      "evidence_summary": "Advertised product price ($49.00) automatically increases to $65.00 upon adding to cart in DARK variant; stable $49.00 in CLEAN variant."
+      "github_repo": "https://github.com/facebook/react.git",
+      "commit_hash": "b26d8338e55c68f128d8b9d8858f9188e7b99a12",
+      "variant_urls": {
+        "dark": "http://localhost:8080/scenario/12?variant=dark",
+        "clean": "http://localhost:8080/scenario/12?variant=clean"
+      },
+      "description": "Product item page listing $49 price that automatically increases to $65 during checkout transition."
     },
     {
       "id": 13,
       "slug": "scenario_13",
       "title": "Social Media Privacy Settings",
       "category": "Settings",
-      "experiment_type": "privacy_preselection",
-      "visual_theme": "consent",
-      "github_repo": "https://github.com/twbs/bootstrap.git",
-      "commit_hash": "c47bf1b2a95c479e0f6e1088a2ef8673f82161f3",
       "dark_patterns": [
         "pre_selected_options"
-      ],
-      "research": {
-        "question": "Are data sharing and public indexing permissions pre-checked by default in account privacy settings?",
-        "observable_dimensions": ["DOM Input Checked State", "Privacy Options Array", "Form Payload"],
-        "journey": ["Open Privacy Settings", "Review Data Sharing Options", "Inspect Default Checkboxes", "Save Settings"]
-      },
-      "interaction_controls": [
-        { "label": "Inspect Default Preferences", "action": "scroll", "selector": ".privacy-form" },
-        { "label": "Uncheck Data Sharing", "action": "click", "selector": "input#data-sharing" },
-        { "label": "Save Preferences", "action": "click", "selector": "button.save-settings" }
       ],
       "predicates": {
         "pre_selected_options": {
           "positive_predicates": [
-            "prechecked_data_sharing",
-            "public_indexing_default"
+            "preselected_privacy_data_sharing"
           ],
           "negative_predicates": [
-            "opt_in_privacy_defaults_in_clean"
+            "unchecked_privacy_sharing_in_clean"
           ]
         }
       },
-      "evidence_summary": "Account privacy data sharing & ad tracking checkboxes pre-selected by default in DARK variant; unchecked in CLEAN variant."
+      "github_repo": "https://github.com/twbs/bootstrap.git",
+      "commit_hash": "c47bf1b2a95c479e0f6e1088a2ef8673f82161f3",
+      "variant_urls": {
+        "dark": "http://localhost:8080/scenario/13?variant=dark",
+        "clean": "http://localhost:8080/scenario/13?variant=clean"
+      },
+      "description": "User account privacy settings form with pre-checked data sharing and public indexing options."
     },
     {
       "id": 14,
       "slug": "scenario_14",
       "title": "Clean Control Baseline",
       "category": "Control Baseline",
-      "experiment_type": "clean_baseline",
-      "visual_theme": "commerce",
+      "dark_patterns": [],
+      "predicates": {},
       "github_repo": "https://github.com/h5bp/html5-boilerplate.git",
       "commit_hash": "e12a4b8905391d1e6702c2f109289871bb219802",
-      "dark_patterns": [],
-      "research": {
-        "question": "Validates that the universal observer and ground-truth evaluator yield zero false positives on clean control pages.",
-        "observable_dimensions": ["Baseline DOM State", "Clean Cart Subtotal", "Neutral CTAs"],
-        "journey": ["Browse Control Store", "Add Product to Cart", "Transparent Checkout", "Verify Zero Patterns"]
+      "variant_urls": {
+        "dark": "http://localhost:8080/scenario/14?variant=dark",
+        "clean": "http://localhost:8080/scenario/14?variant=clean"
       },
-      "interaction_controls": [
-        { "label": "Browse Control Store", "action": "scroll", "selector": ".catalog-grid" },
-        { "label": "Add to Cart", "action": "click", "selector": "button.add-to-cart" },
-        { "label": "Complete Checkout", "action": "click", "selector": "button.checkout" }
-      ],
-      "predicates": {},
-      "evidence_summary": "Transparent product catalog with zero planted dark patterns. Validated zero false positives on clean control page."
+      "description": "Fully transparent, clean control store without any deceptive UI patterns (used for false-positive validation)."
     },
     {
       "id": 15,
       "slug": "scenario_15",
-      "title": "Account Cancellation Portal",
-      "category": "Cancellation",
-      "experiment_type": "cancellation_barrier",
-      "visual_theme": "subscription",
-      "github_repo": "https://github.com/h5bp/html5-boilerplate.git",
-      "commit_hash": "e12a4b8905391d1e6702c2f109289871bb219802",
+      "title": "Search Engine & Native Ad Trap",
+      "category": "Disguised Advertising",
       "dark_patterns": [
-        "forced_continuity"
-      ],
-      "research": {
-        "question": "Does the account termination flow require navigating multi-step survey interstitials before revealing the cancellation button?",
-        "observable_dimensions": ["Navigation Depth", "Retention Interstitial", "DOM Action Visibility"],
-        "journey": ["User Account Dashboard", "Click Cancel Membership", "Bypass Survey Interstitial", "Confirm Permanent Termination"]
-      },
-      "interaction_controls": [
-        { "label": "Initiate Account Cancellation", "action": "click", "selector": "a.cancel-account" },
-        { "label": "Skip Retention Survey", "action": "click", "selector": "button.skip-survey" },
-        { "label": "Final Termination Confirmation", "action": "click", "selector": "button.final-terminate" }
+        "disguised_ads"
       ],
       "predicates": {
-        "forced_continuity": {
+        "disguised_ads": {
           "positive_predicates": [
-            "multi_step_cancellation",
-            "retention_interstitial"
+            "sponsored_ad_mimicking_organic_result",
+            "deceptive_ad_labeling"
           ],
           "negative_predicates": [
-            "direct_one_click_cancel_in_clean"
+            "clearly_labeled_ad_in_clean"
           ]
         }
       },
-      "evidence_summary": "Multi-step retention interstitial survey required in DARK variant before account cancellation link appears; 1-click cancel in CLEAN variant."
+      "github_repo": "https://github.com/angular/angular.git",
+      "commit_hash": "e12a4b8905391d1e6702c2f109289871bb219802",
+      "variant_urls": {
+        "dark": "http://localhost:8080/scenario/15?variant=dark",
+        "clean": "http://localhost:8080/scenario/15?variant=clean"
+      },
+      "description": "Search result page with a sponsored third-party ad visually styled identically to top organic result without prominent ad labels."
     }
   ]
 }

@@ -26,6 +26,11 @@ from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, Field
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
+import sys
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+
 from backend.text_branch import analyze_text_and_dom, CATEGORIES
 from backend.image_branch import analyze_screenshot
 from backend.voice_branch import analyze_audio
